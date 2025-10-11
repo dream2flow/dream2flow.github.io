@@ -1,0 +1,413 @@
+body {
+  /* font-family: 'Noto Sans', sans-serif; */
+  font-family: 'Google Sans', sans-serif;
+}
+
+
+.footer .icon-link {
+    font-size: 1em;
+    color: #000;
+}
+
+.link-block a {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.dnerf {
+  font-variant: small-caps;
+}
+
+
+.teaser .hero-body {
+  padding-top: 0;
+  padding-bottom: 3rem;
+}
+
+.teaser {
+  font-family: 'Google Sans', sans-serif;
+}
+
+
+.publication-title {
+}
+
+.publication-banner {
+  max-height: parent;
+
+}
+
+.publication-banner video {
+  position: relative;
+  left: auto;
+  top: auto;
+  transform: none;
+  object-fit: fit;
+}
+
+.publication-header .hero-body {
+}
+
+.publication-title {
+  font-family: 'Google Sans', sans-serif;
+  color: #8C1515;
+}
+
+.publication-authors {
+    font-family: 'Google Sans', sans-serif;
+}
+
+.publication-venue {
+    color: #555;
+    width: fit-content;
+    font-weight: bold;
+}
+
+.publication-awards {
+    color: #ff3860;
+    width: fit-content;
+    font-weight: bolder;
+}
+
+.publication-authors {
+}
+
+.publication-authors a {
+   color: #000000 !important;
+}
+
+.conference-authors a {
+   color: #000000 !important;
+}
+
+.publication-authors a:hover {
+    text-decoration: underline;
+    color: #414141 !important;
+}
+
+.author-block {
+  display: inline-block;
+}
+
+.publication-banner img {
+}
+
+.publication-authors {
+  /*color: #4286f4;*/
+}
+
+.publication-video {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+
+    overflow: hidden;
+    border-radius: 10px !important;
+}
+
+.publication-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.publication-body img {
+}
+
+.results-carousel {
+  overflow: hidden;
+}
+
+.results-carousel .item {
+  margin: 5px;
+  overflow: hidden;
+  border: 1px solid #bbb;
+  border-radius: 10px;
+  padding: 0;
+  font-size: 0;
+}
+
+.results-carousel video {
+  margin: 0;
+}
+
+
+.interpolation-panel {
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+
+.interpolation-panel .interpolation-image {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.interpolation-video-column {
+}
+
+.interpolation-panel .slider {
+  margin: 0 !important;
+}
+
+.interpolation-panel .slider {
+  margin: 0 !important;
+}
+
+#interpolation-image-wrapper {
+  width: 100%;
+}
+#interpolation-image-wrapper img {
+  border-radius: 5px;
+}
+
+/* 3D Flow Visualization Widget Styles */
+.visualization-widget {
+  margin-top: 2rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  background: #fafafa;
+}
+
+.thumbnail-container {
+  height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.thumbnail-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.thumbnail-item {
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 8px;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.thumbnail-item:hover {
+  border-color: #3273dc;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.thumbnail-item.active {
+  border-color: #3273dc;
+  background: #f0f8ff;
+}
+
+.thumbnail-item img {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.thumbnail-label {
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 5px;
+  color: #333;
+}
+
+.video-container {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.video-container video {
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  /* Ensure native controls are interactive and above any siblings */
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.video-info {
+  text-align: center;
+}
+
+.video-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.video-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.viser-container {
+  background: white;
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.viser-container iframe {
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+
+.viser-info {
+  text-align: center;
+}
+
+.viser-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.viser-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Custom scrollbar for thumbnail container */
+.thumbnail-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.thumbnail-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.thumbnail-container::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.thumbnail-container::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.justify {
+  text-align: justify;
+}
+
+.button-container {
+  color: #53565A;
+  justify-items: center;
+  padding-top: 0.5em;
+  justify-content: center;
+  display: flex;
+}
+
+.button {
+  color: #53565A;
+  font-family: 'Google Sans', sans-serif;
+  border-radius: 0.5em;
+  width: 6em;
+  height: 2.2em;
+  margin-left: 0.4em;
+  margin-right: 0.4em;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1em;
+  text-align: right;
+  vertical-align: middle;
+  border: solid 0px transparent;
+  background-color: #f2f2f2;
+}
+
+.button:hover {
+  background-color: #f2f2f2;
+  filter: brightness(97%);
+}
+
+.affiliation {
+  display: inline-block;
+  color: #2c2c2c;
+  font-family: 'Google Sans', sans-serif;
+  padding-top: 0.8em;
+  text-align: center;
+}
+
+.affiliation-note {
+  display: inline-block;
+  color: #828282;
+  font-family: 'Google Sans', sans-serif;
+  font-size: 1.2em;
+  padding-bottom: 0.8em;
+  text-align: center;
+}
+
+hr.rounded {
+  background: #cbcbcb;
+  border-radius: 15px;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  mix-blend-mode: normal;
+  border: none;
+}
+
+.rows hr.rounded {
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Ensure horizontal lines within container respect content width */
+.container hr.rounded {
+  max-width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.bibtex {
+  font-family: "Courier", monospace;
+  font-size: 0.7em !important;
+  color: #2f2f2f;
+  background-color: #f2f2f2;
+  border: 5px;
+  border-color: #2f2f2f;
+  border-radius: 10px;
+  margin-top: 0.6em;
+  margin-bottom: 3em;
+  padding-top: 0.6em;
+  padding-bottom: 0.6em;
+  vertical-align: center;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  hyphens: none !important;
+  line-height: unset !important;
+}
+
+#method-image img {
+    padding: 0;
+    display: block;
+    margin: 0 auto;
+    max-height: 100%;
+    max-width: 100%;
+}
+
+.method-image {
+    padding: 0;
+    display: block;
+    margin: 0 auto;
+    max-height: 100%;
+    max-width: 100%;
+}
