@@ -82,7 +82,109 @@ $(document).ready(function() {
 
 // 3D Flow Visualization Widget Functions
 function initializeVisualizationWidget() {
-    // Add event listener for video end to ensure looping
+    var thumbnails = Array.from(document.querySelectorAll('.thumbnail-item'));
+    var prevButton = document.querySelector('.thumbnail-nav.is-prev');
+    var nextButton = document.querySelector('.thumbnail-nav.is-next');
+    var dotsContainer = document.querySelector('.thumbnail-dots');
+    var visibleRadius = 1;
+    var activeIndex = 0;
+
+    if (!thumbnails.length || !dotsContainer) {
+        return;
+    }
+
+    dotsContainer.innerHTML = '';
+    thumbnails.forEach(function(_, idx) {
+        var dot = document.createElement('button');
+        dot.className = 'thumbnail-dot' + (idx === 0 ? ' active' : '');
+        dot.type = 'button';
+        dot.setAttribute('aria-label', 'Scene ' + (idx + 1));
+        dot.addEventListener('click', function() {
+            updateActiveThumbnail(idx, true);
+        });
+        dotsContainer.appendChild(dot);
+    });
+
+    var dots = Array.from(dotsContainer.querySelectorAll('.thumbnail-dot'));
+
+    function circularDistance(a, b, length) {
+        var diff = Math.abs(a - b);
+        return Math.min(diff, length - diff);
+    }
+
+    function updateDots(index) {
+        dots.forEach(function(dot, i) {
+            if (i === index) {
+                dot.classList.add('active');
+            } else {
+                dot.classList.remove('active');
+            }
+        });
+    }
+
+    function handleSelection(index) {
+        var targetThumbnail = thumbnails[index];
+
+        $('.thumbnail-item').removeClass('active');
+        targetThumbnail.classList.add('active');
+
+        var videoSrc = targetThumbnail.dataset.video;
+        var viserSrc = targetThumbnail.dataset.viser;
+        var thumbnailLabel = targetThumbnail.dataset.label;
+
+        var videoElement = document.getElementById('main-video');
+        videoElement.src = './static/videos/' + videoSrc;
+        videoElement.load();
+        videoElement.addEventListener('loadeddata', function handler() {
+            videoElement.removeEventListener('loadeddata', handler);
+            videoElement.play().catch(function(error) {
+                console.log('Autoplay prevented:', error);
+            });
+        });
+
+        $('.video-title').text(thumbnailLabel + ' Execution');
+
+        var viserIframe = document.getElementById('viser-iframe');
+        viserIframe.src = viserSrc;
+        $('.viser-title').text('3D Object Flow for ' + thumbnailLabel);
+
+        thumbnails.forEach(function(thumb, i) {
+            var distance = circularDistance(i, index, thumbnails.length);
+            var shouldShow = distance <= visibleRadius + 1;
+            if (shouldShow) {
+                thumb.classList.remove('is-hidden');
+            } else {
+                thumb.classList.add('is-hidden');
+            }
+        });
+
+        targetThumbnail.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+        activeIndex = index;
+        updateDots(activeIndex);
+    }
+
+    function getNextIndex(direction) {
+        return (activeIndex + direction + thumbnails.length) % thumbnails.length;
+    }
+
+    function updateActiveThumbnail(index, forceUpdate) {
+        if (!forceUpdate && index === activeIndex) {
+            return;
+        }
+        handleSelection(index);
+    }
+
+    if (prevButton && nextButton) {
+        prevButton.addEventListener('click', function() {
+            updateActiveThumbnail(getNextIndex(-1), true);
+        });
+
+        nextButton.addEventListener('click', function() {
+            updateActiveThumbnail(getNextIndex(1), true);
+        });
+    }
+
     var videoElement = document.getElementById('main-video');
     videoElement.addEventListener('ended', function() {
         this.currentTime = 0;
@@ -90,43 +192,11 @@ function initializeVisualizationWidget() {
             console.log('Loop play prevented:', error);
         });
     });
-    
-    // Add click event listeners to thumbnail items
+
     $('.thumbnail-item').on('click', function() {
-        // Remove active class from all thumbnails
-        $('.thumbnail-item').removeClass('active');
-        
-        // Add active class to clicked thumbnail
-        $(this).addClass('active');
-        
-        // Get video and viser data from the clicked thumbnail
-        var videoSrc = $(this).data('video');
-        var viserSrc = $(this).data('viser');
-        var thumbnailLabel = $(this).find('.thumbnail-label').text();
-        
-        // Update video source
-        var videoElement = document.getElementById('main-video');
-        videoElement.src = './static/videos/' + videoSrc;
-        videoElement.load(); // Reload the video
-        
-        // Ensure video plays automatically when loaded
-        videoElement.addEventListener('loadeddata', function() {
-            videoElement.play().catch(function(error) {
-                console.log('Autoplay prevented:', error);
-            });
-        });
-        
-        // Update video info
-        $('.video-title').text(thumbnailLabel + ' Execution');
-        
-        // Update Viser iframe source
-        var viserIframe = document.getElementById('viser-iframe');
-        viserIframe.src = viserSrc;
-        
-        // Update Viser info
-        $('.viser-title').text('3D Object Flow for ' + thumbnailLabel);
+        var clickedIndex = thumbnails.indexOf(this);
+        updateActiveThumbnail(clickedIndex, true);
     });
-    
-    // Initialize with first thumbnail as active
-    $('.thumbnail-item').first().trigger('click');
+
+    handleSelection(0);
 }
