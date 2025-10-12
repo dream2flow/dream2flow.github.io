@@ -1,3 +1,17 @@
+.rows {
+  margin-top: 3rem;
+}
+
+.rows + .rows {
+  margin-top: 3rem;
+}
+
+.rows .title {
+  text-transform: capitalize;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
 body {
   /* font-family: 'Noto Sans', sans-serif; */
   font-family: 'Google Sans', sans-serif;
@@ -165,7 +179,7 @@ body {
 
 /* 3D Flow Visualization Widget Styles */
 .visualization-widget {
-  margin-top: 2rem;
+  margin-top: 3rem;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -321,11 +335,192 @@ body {
   background: #000;
 }
 
+.visualization-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.subsection-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-align: left;
+  letter-spacing: 0.02em;
+}
+
+.gradient-heading {
+  background: linear-gradient(90deg, #ff0000 0%, #ff8000 14%, #ffff00 28%, #00ff00 42%, #00ffff 57%, #0080ff 71%, #8000ff 85%, #ff00ff 100%);
+  background-size: 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
+}
+
+.media-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.video-panel {
+  flex: 1 1 320px;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.video-panel > div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.results-panel {
+  flex: 1 1 280px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+}
+
+.results-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.25rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  border: 1px solid #e6e6e6;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.results-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #1f2933;
+}
+
+.results-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.results-summaries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.results-rows-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.results-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.results-row-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2933;
+  margin-bottom: 0.25rem;
+  text-align: left;
+}
+
+.results-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.results-list li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: #f7f9fc;
+  font-size: 0.9rem;
+  color: #3b3b3b;
+  flex: 1;
+  min-width: 80px;
+  text-align: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.results-list li:hover {
+  background: #e8f0ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+}
+
+.results-list li .method-name {
+  font-weight: 500;
+  color: #1f2933;
+}
+
+.results-list li .method-score {
+  font-size: 1rem;
+  color: #3b3b3b;
+}
+
+.results-list li.best-result .method-name,
+.results-list li.best-result .method-score {
+  font-weight: 700;
+}
+
+.results-summaries {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.results-empty {
+  font-size: 0.95rem;
+  color: #6b7280;
+  font-style: italic;
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .visualization-content {
+    gap: 1rem;
+  }
+
+  .media-results {
+    flex-direction: column;
+  }
+
+  .video-panel,
+  .results-panel {
+    width: 100%;
+  }
+}
+
 .video-container {
   background: white;
   border-radius: 8px;
   padding: 1rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .video-container video {
@@ -361,9 +556,14 @@ body {
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
+.viser-container .gradient-heading {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
 .viser-container iframe {
   border-radius: 6px;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 .viser-info {
@@ -456,26 +656,7 @@ body {
 }
 
 hr.rounded {
-  background: #cbcbcb;
-  border-radius: 15px;
-  max-width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  mix-blend-mode: normal;
-  border: none;
-}
-
-.rows hr.rounded {
-  max-width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-}
-
-/* Ensure horizontal lines within container respect content width */
-.container hr.rounded {
-  max-width: 100%;
-  margin-left: 0;
-  margin-right: 0;
+  display: none;
 }
 
 .bibtex {

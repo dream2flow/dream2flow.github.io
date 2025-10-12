@@ -6,7 +6,7 @@
         content="Dream2Flow: Bridging Video Generation and Open-World Manipulation with 3D Object Flow">
   <meta name="keywords" content="Dream2Flow, Video Generation, Robotic Manipulation, 3D Object Flow">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dream2Flow | Bridging Video Generation and Open-World Manipulation with 3D Object Flow</title>
+  <title>Dream2Flow</title>
 
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -45,10 +45,20 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">Dream2Flow: Bridging Video Generation and Open-World<br>Manipulation with 3D Object Flow</h1>
+          <h1 class="title is-1 publication-title">Dream2Flow: Bridging Video Generation and Open-World Manipulation with 3D Object Flow</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><a target="_blank" href="https://kdharmarajan.com/">Karthik Dharmarajan</a>,</span>
+            <span class="author-block"><a target="_blank" href="https://huangwl18.github.io/">Wenlong Huang</a>,</span>
+            <span class="author-block"><a target="_blank" href="https://ai.stanford.edu/~zharu/">Ruohan Zhang</a>,</span>
+            <span class="author-block"><a target="_blank" href="https://jiajunwu.com/">Jiajun Wu</a>,</span>
+            <span class="author-block"><a target="_blank" href="https://profiles.stanford.edu/fei-fei-li">Li Fei-Fei</a></span>
+          </div>
+          <div class="is-size-5 affiliation">Stanford University</div>
 
           <div class="button-container">
-            <a href="./appendix.pdf" target="_blank" class="button"><i class="fa-light"></i>&emsp14;Appendix</a>
+            <a href="https://dream2flow.github.io/paper.pdf" target="_blank" class="button"><i class="fa fa-file-alt"></i>&emsp14;Paper</a>
+            <a href="" target="_blank" class="button"><i class="ai ai-arxiv"></i>&emsp14;arXiv</a>
+            <a href="https://github.com/KDharmarajanDev/Dream2Flow" target="_blank" class="button"><i class="fa fa-code"></i>&emsp14;Code</a>
           </div>
         </div>
       </div>
@@ -79,10 +89,9 @@
 
 <div class="rows">
   <div class="container is-max-desktop">
-    <hr class="rounded">
     <h2 class="title is-3">Video</h2>
     <div class="publication-video">
-        <video controls playsinline preload="metadata" width="100%" height="400" style="display:block; margin:auto;">
+        <video controls playsinline preload="metadata" muted width="100%" height="400" style="display:block; margin:auto;">
           <source src="./static/videos/overview_video.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
@@ -93,7 +102,6 @@
 
 <div class="rows">
   <div class="container is-max-desktop">
-    <hr class="rounded">
     <h2 class="title is-3">Dream2Flow</h2>
     <img src="./static/images/method.png" class="method-image" />
     <p class="content has-text-justified">Given a task instruction and an initial RGB-D observation, an image-to-video model synthesizes video frames conditioned on the instruction. We additionally obtain object masks, video depth, and point tracking from vision foundation models, which are used to reconstruct 3D object flow. 
@@ -104,11 +112,10 @@
 
 <div class="rows">
   <div class="container is-max-desktop">
-    <hr class="rounded">
     <!-- 3D Flow Visualization. -->
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">3D Flow Visualization</h2>
+        <h2 class="title is-3">Results</h2>
         <div class="content has-text-justified">
           <p>
             Interactive 3D visualizations of object flows extracted from generated videos. 
@@ -116,9 +123,52 @@
           </p>
         </div>
         
-        <!-- Visualization Widget -->
+        <!-- Visualization Widget 
+        
+        DATA FORMAT FOR RESULTS:
+        Each thumbnail-item can have results displayed using the data-results_data attribute.
+        
+        ⚠️ IMPORTANT: ALL method links are defined centrally in static/js/index.js in the METHOD_LINKS object.
+        Just add your method name and link there ONCE, and it will work for all examples automatically!
+        NO link definitions are accepted in the HTML data.
+        
+        Format:
+        data-results_data='[
+          {
+            "rowTitle": "Row Title (optional)",
+            "methods": [
+              {"name": "Dream2Flow", "score": "9/10"},
+              {"name": "BC", "score": "7/10"},
+              {"name": "Diffusion Policy", "score": "85%"}
+            ]
+          },
+          {
+            "rowTitle": "Another Metric",
+            "methods": [...]
+          }
+        ]'
+        
+        Features:
+        - Multiple rows supported (each row can have different metrics)
+        - Highest score in each row is automatically bolded
+        - Score formats: fractions (7/10), percentages (85%), decimals (0.85)
+        - Clicking any method opens the link defined in METHOD_LINKS (if exists)
+        - Methods without links in METHOD_LINKS will not be clickable
+        
+        Optional Attributes:
+        - data-empty_message="Custom text here" - Shows custom message when no results data
+          (If not provided, defaults to "No baseline comparisons for this task.")
+        
+        Example with custom empty message:
+        <div class="thumbnail-item" 
+             data-label="Task Name"
+             data-empty_message="Results coming soon!"
+             ...>
+        </div>
+        
+        -->
         <div class="visualization-widget">
-          <div class="thumbnail-card">
+            <div class="thumbnail-card">
             <div class="thumbnail-card-inner">
               <div class="thumbnail-carousel">
                 <button class="thumbnail-nav is-prev" type="button" aria-label="Previous scene">
@@ -126,28 +176,68 @@
                 </button>
                 <div class="thumbnail-container">
                   <div class="thumbnail-scroll">
-                    <div class="thumbnail-item active" data-label="Push-T" data-video="single_execution/push_t_execution.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/pusht.viser&initialCameraPosition=0.358,0.356,0.228&initialCameraLookAt=0.605,0.016,0.006&initialCameraUp=0.000,0.000,1.000">
+                    <div 
+                      class="thumbnail-item active" 
+                      data-label="Push-T" 
+                      data-video="single_execution/push_t_execution.mp4" 
+                      data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/pusht.viser&initialCameraPosition=0.358,0.356,0.228&initialCameraLookAt=0.605,0.016,0.006&initialCameraUp=0.000,0.000,1.000" 
+                      data-results="true" 
+                      data-results-title="Results" 
+                       data-results_data='[{"rowTitle":"Success Rate for Different Video Models","methods":[{"name":"Wan2.1","score":"52/100"},{"name":"Kling 2.1","score":"31/100"}]},{"rowTitle":"Success Rate for Different Dynamics Models","methods":[{"name":"Pose","score":"12/100"},{"name":"Heuristic","score":"17/100"},{"name":"Particle","score":"52/100"}]}]'>
                       <img src="./static/images/flow_thumbnails/push_t.png" alt="Push-T">
                     </div>
-                    <div class="thumbnail-item" data-label="Put Bread in Bowl" data-video="single_execution/put_bread.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/put_bread.viser&initialCameraPosition=0.117,0.128,0.489&initialCameraLookAt=0.628,0.033,-0.000&initialCameraUp=0.000,0.000,1.000">
+                    <div 
+                      class="thumbnail-item" 
+                      data-label="Put Bread in Bowl" 
+                      data-video="single_execution/put_bread.mp4" 
+                      data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/put_bread.viser&initialCameraPosition=0.117,0.128,0.489&initialCameraLookAt=0.628,0.033,-0.000&initialCameraUp=0.000,0.000,1.000" 
+                      data-results="true" 
+                      data-results-title="Results" 
+                      data-results_data='[{"rowTitle":"Success Rate","methods":[{"name":"AVDC","score":"7/10"},{"name":"RIGVID","score":"6/10"},{"name":"Dream2Flow","score":"8/10"}]}]'>
                       <img src="./static/images/flow_thumbnails/put_bread.png" alt="Put Bread in Bowl">
                     </div>
-                    <div class="thumbnail-item" data-label="Open Oven" data-video="single_execution/open_oven.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/open_oven.viser&initialCameraPosition=0.292,0.333,0.607&initialCameraLookAt=0.601,0.243,-0.000&initialCameraUp=0.000,0.000,1.000">
+                    <div 
+                      class="thumbnail-item" 
+                      data-label="Open Oven" 
+                      data-video="single_execution/open_oven.mp4" 
+                      data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/open_oven.viser&initialCameraPosition=0.292,0.333,0.607&initialCameraLookAt=0.601,0.243,-0.000&initialCameraUp=0.000,0.000,1.000"
+                      data-results="true" 
+                      data-results-title="Results" 
+                      data-results_data='[{"rowTitle":"Success Rate","methods":[{"name":"AVDC","score":"0/10"},{"name":"RIGVID","score":"6/10"},{"name":"Dream2Flow","score":"8/10"}]}, {"rowTitle":"Success Rate for Different Video Models","methods":[{"name":"Wan2.1","score":"2/10"},{"name":"Kling 2.1","score":"4/10"},{"name":"Veo 3","score":"8/10"}]}]'>
                       <img src="./static/images/flow_thumbnails/open_oven.png" alt="Open Oven">
                     </div>
-                    <div class="thumbnail-item" data-label="Cover Bowl" data-video="single_execution/cover_bowl.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/cover_bowl.viser&initialCameraPosition=0.108,0.217,0.624&initialCameraLookAt=0.629,0.054,-0.000&initialCameraUp=0.000,0.000,1.000">
+                    <div class="thumbnail-item" data-label="Cover Bowl" data-video="single_execution/cover_bowl.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/cover_bowl.viser&initialCameraPosition=0.108,0.217,0.624&initialCameraLookAt=0.629,0.054,-0.000&initialCameraUp=0.000,0.000,1.000"
+                    data-results="true" 
+                    data-results-title="Results" 
+                    data-results_data='[{"rowTitle":"Success Rate","methods":[{"name":"AVDC","score":"2/10"},{"name":"RIGVID","score":"1/10"},{"name":"Dream2Flow","score":"3/10"}]}]'>
                       <img src="./static/images/flow_thumbnails/cover_bowl.png" alt="Cover Bowl">
                     </div>
-                    <div class="thumbnail-item" data-label="Pull Chair" data-video="single_execution/pull_chair.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/pull_chair.viser&initialCameraPosition=-0.018,0.311,0.347&initialCameraLookAt=0.430,0.334,-0.000&initialCameraUp=0.000,0.000,1.000">
+                    <div class="thumbnail-item" 
+                         data-label="Pull Chair" 
+                         data-video="single_execution/pull_chair.mp4" 
+                         data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/pull_chair.viser&initialCameraPosition=-0.018,0.311,0.347&initialCameraLookAt=0.430,0.334,-0.000&initialCameraUp=0.000,0.000,1.000"
+                         data-empty_message="In-the-wild manipulation demo.">
                       <img src="./static/images/flow_thumbnails/pull_chair.jpg" alt="Pull Chair">
                     </div>
-                    <div class="thumbnail-item" data-label="Open Drawer" data-video="single_execution/open_drawer.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/open_drawer.viser&initialCameraPosition=-0.166,0.555,0.394&initialCameraLookAt=0.586,0.084,-0.086&initialCameraUp=0.000,0.000,1.000">
+                    <div class="thumbnail-item" 
+                         data-label="Open Drawer" 
+                         data-video="single_execution/open_drawer.mp4" 
+                         data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/open_drawer.viser&initialCameraPosition=-0.166,0.555,0.394&initialCameraLookAt=0.586,0.084,-0.086&initialCameraUp=0.000,0.000,1.000"
+                         data-empty_message="In-the-wild manipulation demo.">
                       <img src="./static/images/flow_thumbnails/open_drawer.png" alt="Open Drawer">
                     </div>
-                    <div class="thumbnail-item" data-label="Sweep Pasta" data-video="single_execution/sweep_pasta.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/sweep_pasta.viser&initialCameraPosition=-0.362,0.531,0.726&initialCameraLookAt=0.515,0.462,-0.000&initialCameraUp=0.000,0.000,1.000">
+                    <div class="thumbnail-item" 
+                         data-label="Sweep Pasta" 
+                         data-video="single_execution/sweep_pasta.mp4" 
+                         data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/sweep_pasta.viser&initialCameraPosition=-0.362,0.531,0.726&initialCameraLookAt=0.515,0.462,-0.000&initialCameraUp=0.000,0.000,1.000"
+                         data-empty_message="In-the-wild manipulation demo.">
                       <img src="./static/images/flow_thumbnails/sweep_pasta.png" alt="Sweep Pasta">
                     </div>
-                    <div class="thumbnail-item" data-label="Recycle Can" data-video="single_execution/recycle_can.mp4" data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/recycle_can.viser&initialCameraPosition=-0.103,-0.032,0.439&initialCameraLookAt=0.703,-0.108,-0.170&initialCameraUp=0.000,0.000,1.000">
+                    <div class="thumbnail-item" 
+                         data-label="Recycle Can" 
+                         data-video="single_execution/recycle_can.mp4" 
+                         data-viser="https://dream2flow-icra26.github.io/viser/client/?playbackPath=https://dream2flow-icra26.github.io/viser/recordings/recycle_can.viser&initialCameraPosition=-0.103,-0.032,0.439&initialCameraLookAt=0.703,-0.108,-0.170&initialCameraUp=0.000,0.000,1.000"
+                         data-empty_message="In-the-wild manipulation demo.">
                       <img src="./static/images/flow_thumbnails/recycle_can.jpg" alt="Recycle Can">
                     </div>
                   </div>
@@ -160,34 +250,45 @@
             </div>
           </div>
 
-          <div class="columns is-vcentered">
-            <div class="column is-two-thirds">
-              <div class="viser-container">
-                <iframe 
-                  id="viser-iframe"
-                  src="https://dream2flow-icra26.github.io/viser/" 
-                  width="100%" 
-                  height="460"
-                  frameborder="0"
-                  allowfullscreen>
-                </iframe>
-                <div class="viser-info">
-                  <h4 class="viser-title">3D Object Flow</h4>
+          <div class="visualization-content">
+            <div class="viser-container">
+              <div class="subsection-heading">
+                <span class="gradient-heading">3D Object Flow</span> from Generated Videos
+              </div>
+              <iframe 
+                id="viser-iframe"
+                src="https://dream2flow-icra26.github.io/viser/" 
+                width="100%" 
+                height="460"
+                frameborder="0"
+                allowfullscreen>
+              </iframe>
+            </div>
+
+            <div class="media-results">
+              <div class="video-panel">
+                <div>
+                  <div class="subsection-heading" style="margin-bottom: 0.7rem; text-align: center;">Robot Execution</div>
+                  <div class="video-container">
+                    <video id="main-video" controls autoplay loop muted width="100%" height="320">
+                      <source src="./static/videos/video1.mp4" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
+                </div>
+              </div>
+
+              <div class="results-panel">
+                <div class="results-card">
+                  <h4 class="results-title">Results</h4>
+                  <div class="results-body">
+                    <div class="results-rows-container"></div>
+                    <div class="results-summaries"></div>
+                    <p class="results-empty">No baseline comparisons for this task.</p>
+                  </div>
                 </div>
               </div>
             </div>
-
-            <div class="column is-one-third">
-              <div class="video-container">
-                <video id="main-video" controls autoplay loop muted width="100%" height="320">
-                  <source src="./static/videos/video1.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
-                <div class="video-info">
-                  <h4 class="video-title">Robot Execution</h4>
-                </div>
-              </div>
-            </div>  
           </div>
         </div>
   </div>
@@ -195,7 +296,6 @@
 
 <div class="rows">
   <div class="container is-max-desktop">
-    <hr class="rounded">
     <!-- Same Scene, Multiple Tasks. -->
     <div class="columns is-centered">
       <div class="column is-full-width">

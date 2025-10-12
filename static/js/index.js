@@ -3,6 +3,17 @@ window.HELP_IMPROVE_VIDEOJS = false;
 var INTERP_BASE = "./static/interpolation/stacked";
 var NUM_INTERP_FRAMES = 240;
 
+// Centralized method name to link mapping
+// Define all your method links here once, and they'll be automatically applied
+var METHOD_LINKS = {
+    "Dream2Flow": "https://dream2flow.github.io/",
+    "AVDC": "https://flow-diffusion.github.io/",
+    "RIGVID": "https://rigvid-robot.github.io/",
+    "Veo 3": "https://deepmind.google/models/veo/",
+    "Kling 2.1": "https://klingai.com/global/",
+    "Wan2.1": "https://wan.video/"
+};
+
 var interp_images = [];
 function preloadInterpolationImages() {
   for (var i = 0; i < NUM_INTERP_FRAMES; i++) {
@@ -86,6 +97,12 @@ function initializeVisualizationWidget() {
     var prevButton = document.querySelector('.thumbnail-nav.is-prev');
     var nextButton = document.querySelector('.thumbnail-nav.is-next');
     var dotsContainer = document.querySelector('.thumbnail-dots');
+    var resultsCard = document.querySelector('.results-card');
+    var resultsTitle = document.querySelector('.results-title');
+    var resultsBody = document.querySelector('.results-body');
+    var resultsRowsContainer = document.querySelector('.results-rows-container');
+    var resultsEmpty = document.querySelector('.results-empty');
+    var resultsSummaryContainer = resultsBody ? resultsBody.querySelector('.results-summaries') : null;
     var visibleRadius = 1;
     var activeIndex = 0;
 
@@ -142,11 +159,10 @@ function initializeVisualizationWidget() {
             });
         });
 
-        $('.video-title').text(thumbnailLabel + ' Execution');
-
         var viserIframe = document.getElementById('viser-iframe');
         viserIframe.src = viserSrc;
-        $('.viser-title').text('3D Object Flow for ' + thumbnailLabel);
+
+        updateResultsPanel(targetThumbnail);
 
         thumbnails.forEach(function(thumb, i) {
             var distance = circularDistance(i, index, thumbnails.length);
@@ -166,6 +182,120 @@ function initializeVisualizationWidget() {
 
     function getNextIndex(direction) {
         return (activeIndex + direction + thumbnails.length) % thumbnails.length;
+    }
+
+    function updateResultsPanel(thumbnailEl) {
+        if (!resultsCard) {
+            return;
+        }
+
+        resultsRowsContainer.innerHTML = '';
+        if (resultsSummaryContainer) {
+            resultsSummaryContainer.innerHTML = '';
+        }
+
+        var hasResults = thumbnailEl.dataset.results === 'true';
+        var summaryText = thumbnailEl.dataset.summary || '';
+        var emptyMessage = thumbnailEl.dataset.empty_message || 'No baseline comparisons for this task.';
+        var resultsDataRaw = thumbnailEl.dataset.results_data;
+        var resultsData = [];
+
+        if (resultsDataRaw) {
+            try {
+                resultsData = JSON.parse(resultsDataRaw);
+            } catch (error) {
+                console.warn('Failed to parse results data', error);
+            }
+        }
+
+        if (hasResults && resultsData.length) {
+            resultsCard.classList.remove('is-hidden');
+            resultsTitle.textContent = thumbnailEl.dataset.resultsTitle || 'Results';
+
+            // Create each row
+            resultsData.forEach(function(rowData) {
+                var rowDiv = document.createElement('div');
+                rowDiv.className = 'results-row';
+
+                // Add row title if provided
+                if (rowData.rowTitle) {
+                    var rowTitle = document.createElement('div');
+                    rowTitle.className = 'results-row-title';
+                    rowTitle.textContent = rowData.rowTitle;
+                    rowDiv.appendChild(rowTitle);
+                }
+
+                // Create list for this row
+                var rowList = document.createElement('ul');
+                rowList.className = 'results-list';
+
+                var methods = rowData.methods || [];
+
+                // Find the highest score in this row
+                var maxScore = -1;
+                methods.forEach(function(item) {
+                    var scoreValue = parseScore(item.score);
+                    if (scoreValue > maxScore) {
+                        maxScore = scoreValue;
+                    }
+                });
+
+                // Create list items for each method
+                methods.forEach(function(item) {
+                    var li = document.createElement('li');
+                    var scoreValue = parseScore(item.score);
+                    
+                    // Add best-result class if this is the highest score in this row
+                    if (scoreValue === maxScore) {
+                        li.classList.add('best-result');
+                    }
+
+                    // Get link from centralized METHOD_LINKS mapping
+                    var methodLink = METHOD_LINKS[item.name];
+                    
+                    // Add click handler with link (only if link exists)
+                    if (methodLink) {
+                        li.addEventListener('click', function() {
+                            window.open(methodLink, '_blank');
+                        });
+                    } else {
+                        // No link available, remove cursor pointer for this item
+                        li.style.cursor = 'default';
+                    }
+                    
+                    var nameSpan = document.createElement('span');
+                    nameSpan.className = 'method-name';
+                    nameSpan.textContent = item.name;
+                    
+                    var scoreSpan = document.createElement('span');
+                    scoreSpan.className = 'method-score';
+                    scoreSpan.textContent = item.score;
+                    
+                    li.appendChild(nameSpan);
+                    li.appendChild(scoreSpan);
+                    rowList.appendChild(li);
+                });
+
+                rowDiv.appendChild(rowList);
+                resultsRowsContainer.appendChild(rowDiv);
+            });
+
+            resultsEmpty.style.display = 'none';
+
+            if (summaryText) {
+                if (resultsSummaryContainer) {
+                    var summaryParagraph = document.createElement('p');
+                    summaryParagraph.className = 'results-summary';
+                    summaryParagraph.textContent = summaryText;
+                    resultsSummaryContainer.appendChild(summaryParagraph);
+                }
+            }
+        } else {
+            resultsCard.classList.remove('is-hidden');
+            resultsTitle.textContent = thumbnailEl.dataset.resultsTitle || 'Results';
+            resultsEmpty.textContent = emptyMessage;
+            resultsEmpty.style.display = 'block';
+        }
     }
 
     function updateActiveThumbnail(index, forceUpdate) {
@@ -199,4 +329,37 @@ function initializeVisualizationWidget() {
     });
 
     handleSelection(0);
+}
+
+// Helper function to parse scores from various formats (e.g., "90%", "7/10", "0.9")
+function parseScore(scoreText) {
+    if (!scoreText) return 0;
+    
+    // Handle percentage format (e.g., "90%")
+    if (scoreText.includes('%')) {
+        return parseFloat(scoreText.replace('%', ''));
+    }
+    
+    // Handle fraction format (e.g., "7/10")
+    if (scoreText.includes('/')) {
+        var parts = scoreText.split('/');
+        if (parts.length === 2) {
+            var numerator = parseFloat(parts[0]);
+            var denominator = parseFloat(parts[1]);
+            if (denominator !== 0) {
+                return (numerator / denominator) * 100;
+            }
+        }
+    }
+    
+    // Handle decimal format (e.g., "0.9")
+    var num = parseFloat(scoreText);
+    if (!isNaN(num)) {
+        if (num <= 1.0) {
+            return num * 100;
+        }
+        return num;
+    }
+    
+    return 0;
 }
