@@ -88,6 +88,9 @@ $(document).ready(function() {
 
     // 3D Flow Visualization functionality
     initializeVisualizationWidget();
+    
+    // Robustness Hover Card functionality
+    initializeRobustnessHoverCards();
 
 })
 
@@ -362,4 +365,116 @@ function parseScore(scoreText) {
     }
     
     return 0;
+}
+
+// Robustness Hover Card Functionality
+function initializeRobustnessHoverCards() {
+    // Create hover card element
+    var hoverCard = $('<div class="robustness-hover-card"></div>');
+    $('body').append(hoverCard);
+    
+    var currentWrapper = null;
+    var hideTimeout = null;
+    
+    function showHoverCard(wrapper, e) {
+        clearTimeout(hideTimeout);
+        currentWrapper = wrapper;
+        
+        var refTitle = $(wrapper).data('ref-title');
+        var refImage = $(wrapper).data('ref-image');
+        var refDesc = $(wrapper).data('ref-desc');
+        var modTitle = $(wrapper).data('mod-title');
+        var modImage = $(wrapper).data('mod-image');
+        var modDesc = $(wrapper).data('mod-desc');
+        
+        // Build card content
+        var cardHTML = '';
+        
+        // Reference Scenario Section
+        cardHTML += '<div class="hover-card-section">';
+        cardHTML += '<div class="hover-card-title">' + refTitle + '</div>';
+        cardHTML += '<video class="hover-card-image" autoplay loop muted playsinline>';
+        cardHTML += '<source src="' + refImage + '" type="video/mp4">';
+        cardHTML += '</video>';
+        cardHTML += '<div class="hover-card-description">' + refDesc + '</div>';
+        cardHTML += '</div>';
+        
+        // Modified Scenario Section
+        cardHTML += '<div class="hover-card-section">';
+        cardHTML += '<div class="hover-card-title">' + modTitle + '</div>';
+        cardHTML += '<video class="hover-card-image" autoplay loop muted playsinline>';
+        cardHTML += '<source src="' + modImage + '" type="video/mp4">';
+        cardHTML += '</video>';
+        cardHTML += '<div class="hover-card-description">' + modDesc + '</div>';
+        cardHTML += '</div>';
+        
+        hoverCard.html(cardHTML);
+        
+        // Position card near cursor
+        positionHoverCard(e);
+        
+        // Show card
+        hoverCard.addClass('visible');
+    }
+    
+    function hideHoverCard() {
+        hideTimeout = setTimeout(function() {
+            hoverCard.removeClass('visible');
+            currentWrapper = null;
+        }, 100);
+    }
+    
+    function positionHoverCard(e) {
+        var cardWidth = 320;
+        var cardHeight = hoverCard.outerHeight();
+        var offsetX = 20;
+        var offsetY = 20;
+        
+        // Use viewport-relative coordinates for fixed positioning
+        var cursorX = (e.clientX !== undefined) ? e.clientX : e.originalEvent.clientX;
+        var cursorY = (e.clientY !== undefined) ? e.clientY : e.originalEvent.clientY;
+        
+        var posX = cursorX + offsetX;
+        // Vertically center the card around the cursor
+        if (!cardHeight || cardHeight <= 0) {
+            cardHeight = 200; // fallback to a reasonable default
+        }
+        var posY = cursorY - Math.round(cardHeight / 2);
+        
+        // Keep card within viewport (no scroll offsets needed for fixed elements)
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
+        
+        // Horizontal overflow handling: prefer right side, otherwise place to the left
+        if (posX + cardWidth > windowWidth) {
+            posX = Math.max(8, cursorX - cardWidth - offsetX);
+        }
+        
+        // Vertical clamping with small margins
+        if (posY < 8) {
+            posY = 8;
+        } else if (posY + cardHeight > windowHeight - 8) {
+            posY = Math.max(8, windowHeight - cardHeight - 8);
+        }
+        
+        hoverCard.css({
+            left: posX + 'px',
+            top: posY + 'px'
+        });
+    }
+    
+    // Attach event handlers to robustness video wrappers
+    $('.robustness-video-wrapper').on('mouseenter', function(e) {
+        showHoverCard(this, e);
+    });
+    
+    $('.robustness-video-wrapper').on('mousemove', function(e) {
+        if (currentWrapper === this) {
+            positionHoverCard(e);
+        }
+    });
+    
+    $('.robustness-video-wrapper').on('mouseleave', function() {
+        hideHoverCard();
+    });
 }

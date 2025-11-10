@@ -102,6 +102,106 @@
 
 <div class="rows">
   <div class="container is-max-desktop">
+    <h2 class="title is-3">Generated Video Quality Variation Across Embodiments</h2>
+    <div class="content has-text-justified">
+      <p>
+        We compare video quality across different state-of-the-art video generation models and embodiments.
+        Each column corresponds to a model, showing three example prompts. The bottom row contains human videos,
+        highlighted with a continuous outline spanning across all three columns.
+      </p>
+    </div>
+    <div class="columns is-multiline is-mobile is-gapless" style="margin-top: 0.5rem;">
+      <!-- Kling 2.5 Column -->
+      <div class="column is-one-third" style="padding: 0.25rem;">
+        <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+          <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Kling 2.5</p>
+          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
+            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+              <source src="./static/videos/single_execution/open_oven.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
+            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+              <source src="./static/videos/single_execution/open_drawer.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Veo 3 Column -->
+      <div class="column is-one-third" style="padding: 0.25rem;">
+        <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+          <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Veo 3</p>
+          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
+            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+              <source src="./static/videos/single_execution/sweep_pasta.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
+            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+              <source src="./static/videos/single_execution/cover_bowl.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sora 2 Column -->
+      <div class="column is-one-third" style="padding: 0.25rem;">
+        <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+          <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Sora 2</p>
+          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
+            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+              <source src="./static/videos/single_execution/open_oven.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
+            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+              <source src="./static/videos/single_execution/pull_chair.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Unified bottom row outline across all three columns -->
+    <div class="gv-bottom-outline" style="border: 2px solid #9CA3AF; border-radius: 8px; padding: 0.25rem; margin: 0.4rem 0 0.5rem 0;">
+      <div class="columns is-mobile is-gapless" style="margin: 0;">
+        <div class="column is-one-third" style="padding: 0.25rem;">
+          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+            <source src="./static/videos/single_execution/pull_chair.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="column is-one-third" style="padding: 0.25rem;">
+          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+            <source src="./static/videos/single_execution/open_drawer.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+        <div class="column is-one-third" style="padding: 0.25rem;">
+          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+            <source src="./static/videos/single_execution/sweep_pasta.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </div>
+    <div class="content has-text-justified" style="margin-top: 0.5rem;">
+      <p>
+        The outlined bottom row contains human-captured videos for reference. This contrast emphasizes differences
+        in visual fidelity and motion quality between model-generated and human videos across embodiments.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="rows">
+  <div class="container is-max-desktop">
     <h2 class="title is-3">Dream2Flow</h2>
     <img src="./static/images/method.png" class="method-image" />
     <p class="content has-text-justified">Given a task instruction and an initial RGB-D observation, an image-to-video model synthesizes video frames conditioned on the instruction. We additionally obtain object masks, video depth, and point tracking from vision foundation models, which are used to reconstruct 3D object flow. 
@@ -255,14 +355,20 @@
               <div class="subsection-heading">
                 <span class="gradient-heading">3D Object Flow</span> from Generated Videos
               </div>
-              <iframe 
-                id="viser-iframe"
-                src="https://dream2flow.github.io/viser/" 
-                width="100%" 
-                height="460"
-                frameborder="0"
-                allowfullscreen>
-              </iframe>
+              <div class="viser-frame-wrapper">
+                <div class="viser-overlay-badge">
+                  <i class="fas fa-arrows-alt" aria-hidden="true"></i>
+                  <span>Click and move me</span>
+                </div>
+                <iframe 
+                  id="viser-iframe"
+                  src="https://dream2flow.github.io/viser/" 
+                  width="100%" 
+                  height="460"
+                  frameborder="0"
+                  allowfullscreen>
+                </iframe>
+              </div>
             </div>
 
             <div class="media-results">
@@ -307,61 +413,114 @@
           </p>
         </div>
 
-        <div class="columns is-multiline is-mobile" style="margin-top: 1.5rem;">
+        <div class="hover-instruction">
+          <i class="fas fa-info-circle"></i>
+          <span>Hover over each video for more information</span>
+        </div>
+
+        <div class="columns is-multiline is-mobile" style="margin-top: 0.5\rem;">
           <!-- Object Instance Column -->
           <div class="column is-one-third" style="padding: 0.5rem;">
             <div style="background-color: #e8f4f8; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
+              <p class="has-text-centered" style="font-weight: 600; margin: 0 0 0.5rem 0;">Object Instance</p>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
-                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-                  <source src="./static/videos/robustness/donut.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
+                <div class="robustness-video-wrapper" 
+                     data-ref-title="Reference Scenario" 
+                     data-ref-image="./static/videos/robustness/donut.mp4"
+                     data-ref-desc="Put bread in bowl"
+                     data-mod-title="Modified Scenario"
+                     data-mod-image="./static/videos/robustness/donut.mp4"
+                     data-mod-desc="Replace bread with donut">
+                  <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                    <source src="./static/videos/robustness/donut.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
-                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-                  <source src="./static/videos/robustness/long_bread.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
+                <div class="robustness-video-wrapper"
+                     data-ref-title="Reference Scenario" 
+                     data-ref-image="./static/videos/robustness/long_bread.mp4"
+                     data-ref-desc="Put bread in bowl"
+                     data-mod-title="Modified Scenario"
+                     data-mod-image="./static/videos/robustness/long_bread.mp4"
+                     data-mod-desc="Replace bread with long bread">
+                  <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                    <source src="./static/videos/robustness/long_bread.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
-              <p class="has-text-centered" style="font-weight: 600; margin: 0;">Object Instance</p>
             </div>
           </div>
 
           <!-- Background Column -->
           <div class="column is-one-third" style="padding: 0.5rem;">
             <div style="background-color: #f0e8f4; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
+              <p class="has-text-centered" style="font-weight: 600; margin: 0 0 0.5rem 0;">Background</p>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
-                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-                  <source src="./static/videos/robustness/green_white_bg.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
+                <div class="robustness-video-wrapper"
+                     data-ref-title="Reference Scenario" 
+                     data-ref-image="./static/videos/robustness/green_white_bg.mp4"
+                     data-ref-desc="Neutral background"
+                     data-mod-title="Modified Scenario"
+                     data-mod-image="./static/videos/robustness/green_white_bg.mp4"
+                     data-mod-desc="Green and white striped background">
+                  <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                    <source src="./static/videos/robustness/green_white_bg.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
-                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-                  <source src="./static/videos/robustness/art_bg.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
+                <div class="robustness-video-wrapper"
+                     data-ref-title="Reference Scenario" 
+                     data-ref-image="./static/videos/robustness/art_bg.mp4"
+                     data-ref-desc="Neutral background"
+                     data-mod-title="Modified Scenario"
+                     data-mod-image="./static/videos/robustness/art_bg.mp4"
+                     data-mod-desc="Artistic patterned background">
+                  <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                    <source src="./static/videos/robustness/art_bg.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
-              <p class="has-text-centered" style="font-weight: 600; margin: 0;">Background</p>
             </div>
           </div>
 
           <!-- Camera Viewing Angle Column -->
           <div class="column is-one-third" style="padding: 0.5rem;">
             <div style="background-color: #F3F4F6; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
+              <p class="has-text-centered" style="font-weight: 600; margin: 0 0 0.5rem 0;">Camera Viewing Angle</p>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
-                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-                  <source src="./static/videos/robustness/left_cam.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
+                <div class="robustness-video-wrapper"
+                     data-ref-title="Reference Scenario" 
+                     data-ref-image="./static/videos/robustness/left_cam.mp4"
+                     data-ref-desc="Center camera viewpoint"
+                     data-mod-title="Modified Scenario"
+                     data-mod-image="./static/videos/robustness/left_cam.mp4"
+                     data-mod-desc="Left camera viewpoint">
+                  <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                    <source src="./static/videos/robustness/left_cam.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
-                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-                  <source src="./static/videos/robustness/right_cam.mp4" type="video/mp4">
-                  Your browser does not support the video tag.
-                </video>
+                <div class="robustness-video-wrapper"
+                     data-ref-title="Reference Scenario" 
+                     data-ref-image="./static/videos/robustness/right_cam.mp4"
+                     data-ref-desc="Center camera viewpoint"
+                     data-mod-title="Modified Scenario"
+                     data-mod-image="./static/videos/robustness/right_cam.mp4"
+                     data-mod-desc="Right camera viewpoint">
+                  <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                    <source src="./static/videos/robustness/right_cam.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
               </div>
-              <p class="has-text-centered" style="font-weight: 600; margin: 0;">Camera Viewing Angle</p>
             </div>
           </div>
         </div>
