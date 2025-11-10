@@ -91,7 +91,7 @@
   <div class="container is-max-desktop">
     <h2 class="title is-3">Video</h2>
     <div class="publication-video">
-        <video controls playsinline preload="metadata" muted width="100%" height="400" style="display:block; margin:auto;">
+        <video class="main-video" controls playsinline preload="metadata" muted width="100%" height="400" style="display:block; margin:auto;">
           <source src="./static/videos/overview_video.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
@@ -270,7 +270,7 @@
                 <div>
                   <div class="subsection-heading" style="margin-bottom: 0.7rem; text-align: center;">Robot Execution</div>
                   <div class="video-container">
-                    <video id="main-video" controls autoplay loop muted width="100%" height="320">
+                    <video id="main-video" autoplay loop muted width="100%" height="320">
                       <source src="./static/videos/video1.mp4" type="video/mp4">
                       Your browser does not support the video tag.
                     </video>
@@ -296,6 +296,82 @@
 
 <div class="rows">
   <div class="container is-max-desktop">
+    <!-- Robustness Evaluation -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Robustness Evaluation</h2>
+        <div class="content has-text-justified">
+          <p>
+            To assess Dream2Flow's generalization to different object instances, backgrounds, and camera viewing angles, we conduct an 
+            additional five trials each for six different scenarios. 
+          </p>
+        </div>
+
+        <div class="columns is-multiline is-mobile" style="margin-top: 1.5rem;">
+          <!-- Object Instance Column -->
+          <div class="column is-one-third" style="padding: 0.5rem;">
+            <div style="background-color: #e8f4f8; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
+              <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
+                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                  <source src="./static/videos/single_execution/push_t_execution.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
+                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                  <source src="./static/videos/single_execution/put_bread.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <p class="has-text-centered" style="font-weight: 600; margin: 0;">Object Instance</p>
+            </div>
+          </div>
+
+          <!-- Background Column -->
+          <div class="column is-one-third" style="padding: 0.5rem;">
+            <div style="background-color: #f0e8f4; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
+              <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
+                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                  <source src="./static/videos/single_execution/open_oven.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
+                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                  <source src="./static/videos/single_execution/cover_bowl.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <p class="has-text-centered" style="font-weight: 600; margin: 0;">Background</p>
+            </div>
+          </div>
+
+          <!-- Camera Viewing Angle Column -->
+          <div class="column is-one-third" style="padding: 0.5rem;">
+            <div style="background-color: #F3F4F6; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
+              <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
+                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                  <source src="./static/videos/single_execution/pull_chair.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
+                <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                  <source src="./static/videos/single_execution/open_drawer.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <p class="has-text-centered" style="font-weight: 600; margin: 0;">Camera Viewing Angle</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rows">
+  <div class="container is-max-desktop">
     <!-- Same Scene, Multiple Tasks. -->
     <div class="columns is-centered">
       <div class="column is-full-width">
@@ -306,7 +382,7 @@
 
     <div class="columns is-multiline is-variable is-1">
         <div class="column is-one-third">
-          <video controls playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
             <source src="./static/videos/donut_multitask.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -314,7 +390,7 @@
       </div>
 
       <div class="column is-one-third">
-          <video controls playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
             <source src="./static/videos/bread_multitask.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
@@ -322,7 +398,7 @@
       </div>
 
       <div class="column is-one-third">
-          <video controls playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
             <source src="./static/videos/mug_multitask.mp4" type="video/mp4">
             Your browser does not support the video tag.
           </video>
