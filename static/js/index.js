@@ -393,18 +393,14 @@ function initializeRobustnessHoverCards() {
         // Reference Scenario Section
         cardHTML += '<div class="hover-card-section">';
         cardHTML += '<div class="hover-card-title">' + refTitle + '</div>';
-        cardHTML += '<video class="hover-card-image" autoplay loop muted playsinline>';
-        cardHTML += '<source src="' + refImage + '" type="video/mp4">';
-        cardHTML += '</video>';
+        cardHTML += '<img class="hover-card-image" src="' + refImage + '" alt="' + refTitle + '">';
         cardHTML += '<div class="hover-card-description">' + refDesc + '</div>';
         cardHTML += '</div>';
         
         // Modified Scenario Section
         cardHTML += '<div class="hover-card-section">';
         cardHTML += '<div class="hover-card-title">' + modTitle + '</div>';
-        cardHTML += '<video class="hover-card-image" autoplay loop muted playsinline>';
-        cardHTML += '<source src="' + modImage + '" type="video/mp4">';
-        cardHTML += '</video>';
+        cardHTML += '<img class="hover-card-image" src="' + modImage + '" alt="' + modTitle + '">';
         cardHTML += '<div class="hover-card-description">' + modDesc + '</div>';
         cardHTML += '</div>';
         

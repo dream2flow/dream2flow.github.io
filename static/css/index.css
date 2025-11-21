@@ -797,3 +797,11 @@ hr.rounded {
     position: relative;
     cursor: help;
 }
+
+/* Responsive layout for robustness evaluation columns */
+@media screen and (max-width: 768px) {
+    .robustness-evaluation-columns .column.is-one-third-tablet {
+        width: 100% !important;
+        flex: none !important;
+    }
+}

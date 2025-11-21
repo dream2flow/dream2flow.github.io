@@ -418,19 +418,19 @@
           <span>Hover over each video for more information</span>
         </div>
 
-        <div class="columns is-multiline is-mobile" style="margin-top: 0.5\rem;">
+        <div class="columns is-multiline is-mobile robustness-evaluation-columns" style="margin-top: 0.5\rem;">
           <!-- Object Instance Column -->
-          <div class="column is-one-third" style="padding: 0.5rem;">
+          <div class="column is-one-third-tablet" style="padding: 0.5rem;">
             <div style="background-color: #e8f4f8; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
               <p class="has-text-centered" style="font-weight: 600; margin: 0 0 0.5rem 0;">Object Instance</p>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
                 <div class="robustness-video-wrapper" 
                      data-ref-title="Reference Scenario" 
-                     data-ref-image="./static/videos/robustness/donut.mp4"
-                     data-ref-desc="Put bread in bowl"
+                     data-ref-image="./static/images/robustness/put_bread_original.png"
+                     data-ref-desc="Put bread in the bowl."
                      data-mod-title="Modified Scenario"
-                     data-mod-image="./static/videos/robustness/donut.mp4"
-                     data-mod-desc="Replace bread with donut">
+                     data-mod-image="./static/images/robustness/put_donut.png"
+                     data-mod-desc="Put donut in the bowl.">
                   <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
                     <source src="./static/videos/robustness/donut.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -440,11 +440,11 @@
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
                 <div class="robustness-video-wrapper"
                      data-ref-title="Reference Scenario" 
-                     data-ref-image="./static/videos/robustness/long_bread.mp4"
-                     data-ref-desc="Put bread in bowl"
+                     data-ref-image="./static/images/robustness/put_bread_original.png"
+                     data-ref-desc="Put bread in the bowl."
                      data-mod-title="Modified Scenario"
-                     data-mod-image="./static/videos/robustness/long_bread.mp4"
-                     data-mod-desc="Replace bread with long bread">
+                     data-mod-image="./static/images/robustness/put_long_bread.png"
+                     data-mod-desc="Put long piece of bread in the bowl">
                   <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
                     <source src="./static/videos/robustness/long_bread.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -455,17 +455,17 @@
           </div>
 
           <!-- Background Column -->
-          <div class="column is-one-third" style="padding: 0.5rem;">
+          <div class="column is-one-third-tablet" style="padding: 0.5rem;">
             <div style="background-color: #f0e8f4; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
               <p class="has-text-centered" style="font-weight: 600; margin: 0 0 0.5rem 0;">Background</p>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
                 <div class="robustness-video-wrapper"
                      data-ref-title="Reference Scenario" 
-                     data-ref-image="./static/videos/robustness/green_white_bg.mp4"
-                     data-ref-desc="Neutral background"
+                     data-ref-image="./static/images/robustness/put_bread_original.png"
+                     data-ref-desc="All black background."
                      data-mod-title="Modified Scenario"
-                     data-mod-image="./static/videos/robustness/green_white_bg.mp4"
-                     data-mod-desc="Green and white striped background">
+                     data-mod-image="./static/images/robustness/put_bread_green_white.png"
+                     data-mod-desc="Green and white striped background.">
                   <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
                     <source src="./static/videos/robustness/green_white_bg.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -475,11 +475,11 @@
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
                 <div class="robustness-video-wrapper"
                      data-ref-title="Reference Scenario" 
-                     data-ref-image="./static/videos/robustness/art_bg.mp4"
-                     data-ref-desc="Neutral background"
+                     data-ref-image="./static/images/robustness/put_bread_original.png"
+                     data-ref-desc="All black background."
                      data-mod-title="Modified Scenario"
-                     data-mod-image="./static/videos/robustness/art_bg.mp4"
-                     data-mod-desc="Artistic patterned background">
+                     data-mod-image="./static/images/robustness/put_bread_paint_strokes.png"
+                     data-mod-desc="Painting striped background.">
                   <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
                     <source src="./static/videos/robustness/art_bg.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -490,17 +490,17 @@
           </div>
 
           <!-- Camera Viewing Angle Column -->
-          <div class="column is-one-third" style="padding: 0.5rem;">
+          <div class="column is-one-third-tablet" style="padding: 0.5rem;">
             <div style="background-color: #F3F4F6; padding: 0.5rem; border-radius: 8px; height: 100%; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);">
               <p class="has-text-centered" style="font-weight: 600; margin: 0 0 0.5rem 0;">Camera Viewing Angle</p>
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
                 <div class="robustness-video-wrapper"
                      data-ref-title="Reference Scenario" 
-                     data-ref-image="./static/videos/robustness/left_cam.mp4"
-                     data-ref-desc="Center camera viewpoint"
+                     data-ref-image="./static/images/robustness/put_bread_original.png"
+                     data-ref-desc="Original top-down viewpoint."
                      data-mod-title="Modified Scenario"
-                     data-mod-image="./static/videos/robustness/left_cam.mp4"
-                     data-mod-desc="Left camera viewpoint">
+                     data-mod-image="./static/images/robustness/put_bread_left_cam.png"
+                     data-mod-desc="Left-side viewpoint.">
                   <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
                     <source src="./static/videos/robustness/left_cam.mp4" type="video/mp4">
                     Your browser does not support the video tag.
@@ -510,11 +510,11 @@
               <div class="column" style="padding: 0; margin-bottom: 0.5rem;">
                 <div class="robustness-video-wrapper"
                      data-ref-title="Reference Scenario" 
-                     data-ref-image="./static/videos/robustness/right_cam.mp4"
-                     data-ref-desc="Center camera viewpoint"
+                     data-ref-image="./static/images/robustness/put_bread_original.png"
+                     data-ref-desc="Original top-down viewpoint."
                      data-mod-title="Modified Scenario"
-                     data-mod-image="./static/videos/robustness/right_cam.mp4"
-                     data-mod-desc="Right camera viewpoint">
+                     data-mod-image="./static/images/robustness/put_bread_right_cam.png"
+                     data-mod-desc="Right-side viewpoint.">
                   <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
                     <source src="./static/videos/robustness/right_cam.mp4" type="video/mp4">
                     Your browser does not support the video tag.
