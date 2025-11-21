@@ -383,23 +383,52 @@ function initializeRobustnessHoverCards() {
         var refTitle = $(wrapper).data('ref-title');
         var refImage = $(wrapper).data('ref-image');
         var refDesc = $(wrapper).data('ref-desc');
+        var refSuccess = $(wrapper).data('ref-success') || '';
         var modTitle = $(wrapper).data('mod-title');
         var modImage = $(wrapper).data('mod-image');
         var modDesc = $(wrapper).data('mod-desc');
+        var modSuccess = $(wrapper).data('mod-success') || '';
+        
+        // Calculate relative improvement for modified scenario (compared to reference)
+        var improvementIndicator = '';
+        if (refSuccess && modSuccess) {
+            var refScore = parseScore(refSuccess);
+            var modScore = parseScore(modSuccess);
+            var improvement = modScore - refScore; // How much better/worse modified is compared to reference
+            var improvementRounded = Math.round(improvement);
+            if (improvementRounded > 0) {
+                improvementIndicator = '<span class="improvement-indicator positive">+' + improvementRounded + '%</span>';
+            } else if (improvementRounded < 0) {
+                improvementIndicator = '<span class="improvement-indicator negative">' + improvementRounded + '%</span>';
+            } else {
+                improvementIndicator = '<span class="improvement-indicator neutral">0%</span>';
+            }
+        }
         
         // Build card content
         var cardHTML = '';
         
         // Reference Scenario Section
         cardHTML += '<div class="hover-card-section">';
-        cardHTML += '<div class="hover-card-title">' + refTitle + '</div>';
+        cardHTML += '<div class="hover-card-title">' + refTitle;
+        if (refSuccess) {
+            cardHTML += ' <span class="success-rate">' + refSuccess + '</span>';
+        }
+        cardHTML += '</div>';
         cardHTML += '<img class="hover-card-image" src="' + refImage + '" alt="' + refTitle + '">';
         cardHTML += '<div class="hover-card-description">' + refDesc + '</div>';
         cardHTML += '</div>';
         
         // Modified Scenario Section
         cardHTML += '<div class="hover-card-section">';
-        cardHTML += '<div class="hover-card-title">' + modTitle + '</div>';
+        cardHTML += '<div class="hover-card-title">' + modTitle;
+        if (modSuccess) {
+            cardHTML += ' <span class="success-rate">' + modSuccess + '</span>';
+        }
+        if (improvementIndicator) {
+            cardHTML += ' ' + improvementIndicator;
+        }
+        cardHTML += '</div>';
         cardHTML += '<img class="hover-card-image" src="' + modImage + '" alt="' + modTitle + '">';
         cardHTML += '<div class="hover-card-description">' + modDesc + '</div>';
         cardHTML += '</div>';

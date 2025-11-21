@@ -777,6 +777,43 @@ hr.rounded {
     margin-bottom: 0.75rem;
     color: #1f2933;
     padding-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.success-rate {
+    font-weight: 700;
+    color: #3273dc;
+    font-size: 0.9rem;
+    background-color: #e8f0ff;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+.improvement-indicator {
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.improvement-indicator.positive {
+    color: #27ae60;
+    background-color: #d4edda;
+}
+
+.improvement-indicator.negative {
+    color: #e74c3c;
+    background-color: #f8d7da;
+}
+
+.improvement-indicator.neutral {
+    color: #6c757d;
+    background-color: #e9ecef;
 }
 
 .hover-card-image {
