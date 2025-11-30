@@ -32,6 +32,14 @@
   <link rel="stylesheet" href="./static/css/index.css">
   <link rel="icon" href="./static/images/favicon.ico">
 
+  <!-- Preload robustness evaluation images -->
+  <link rel="preload" as="image" href="./static/images/robustness/put_donut.webp">
+  <link rel="preload" as="image" href="./static/images/robustness/put_long_bread.webp">
+  <link rel="preload" as="image" href="./static/images/robustness/put_bread_green_white.webp">
+  <link rel="preload" as="image" href="./static/images/robustness/put_bread_paint_strokes.webp">
+  <link rel="preload" as="image" href="./static/images/robustness/put_bread_left_cam.webp">
+  <link rel="preload" as="image" href="./static/images/robustness/put_bread_right_cam.webp">
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
   <script src="./static/js/bulma-carousel.min.js"></script>
@@ -447,7 +455,7 @@
                      data-ref-success="8/10"
                      data-mod-title="Modified Scenario"
                      data-mod-image="./static/images/robustness/put_long_bread.webp"
-                     data-mod-desc="Put long piece of bread in the bowl"
+                     data-mod-desc="Put long piece of bread in the bowl."
                      data-mod-success="2/5">
                   <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
                     <source src="./static/videos/robustness/long_bread.mp4" type="video/mp4">
