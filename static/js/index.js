@@ -139,16 +139,199 @@ function initializeVisualizationWidget() {
         });
     }
 
+    // Video syncing state
+    var syncedVideos = {
+        master: null,
+        slaves: [],
+        isSyncing: false,
+        syncHandler: null
+    };
+
+    function syncTopRowVideos(generatedVideoSrc, videoDepthSrc, tracks2dSrc) {
+        // Clear previous sync handlers
+        if (syncedVideos.syncHandler) {
+            if (syncedVideos.master) {
+                syncedVideos.master.removeEventListener('timeupdate', syncedVideos.syncHandler);
+                syncedVideos.master.removeEventListener('play', syncedVideos.syncHandler);
+                syncedVideos.master.removeEventListener('pause', syncedVideos.syncHandler);
+                syncedVideos.master.removeEventListener('seeked', syncedVideos.syncHandler);
+            }
+        }
+        syncedVideos.master = null;
+        syncedVideos.slaves = [];
+        syncedVideos.isSyncing = false;
+
+        var videosToLoad = [];
+        var loadedCount = 0;
+        var totalVideos = 0;
+
+        // Setup Generated Video (master)
+        if (generatedVideoSrc) {
+            totalVideos++;
+            var generatedVideoElement = document.getElementById('generated-video');
+            var generatedVideoSource = generatedVideoElement.querySelector('source');
+            generatedVideoSource.src = './static/videos/' + generatedVideoSrc;
+            generatedVideoElement.load();
+            
+            var loadHandler = function() {
+                loadedCount++;
+                if (loadedCount === totalVideos) {
+                    startSyncedPlayback();
+                }
+            };
+            
+            generatedVideoElement.addEventListener('loadeddata', loadHandler, { once: true });
+            videosToLoad.push({ element: generatedVideoElement, src: generatedVideoSrc });
+            syncedVideos.master = generatedVideoElement;
+        }
+
+        // Setup Video Depth (slave)
+        if (videoDepthSrc) {
+            totalVideos++;
+            var videoDepthElement = document.getElementById('video-depth');
+            var videoDepthSource = videoDepthElement.querySelector('source');
+            videoDepthSource.src = './static/videos/' + videoDepthSrc;
+            videoDepthElement.load();
+            
+            var loadHandler = function() {
+                loadedCount++;
+                if (loadedCount === totalVideos) {
+                    startSyncedPlayback();
+                }
+            };
+            
+            videoDepthElement.addEventListener('loadeddata', loadHandler, { once: true });
+            videosToLoad.push({ element: videoDepthElement, src: videoDepthSrc });
+            syncedVideos.slaves.push(videoDepthElement);
+        }
+
+        // Setup 2D Tracks (slave)
+        if (tracks2dSrc) {
+            var tracks2dElement = document.getElementById('tracks-2d');
+            if (!tracks2dElement) {
+                console.error('tracks-2d element not found');
+            } else {
+                totalVideos++;
+                var tracks2dSource = tracks2dElement.querySelector('source');
+                if (!tracks2dSource) {
+                    console.error('tracks-2d source element not found');
+                } else {
+                    tracks2dSource.src = './static/videos/' + tracks2dSrc;
+                    tracks2dElement.load();
+            
+            var loadHandler = function() {
+                loadedCount++;
+                if (loadedCount === totalVideos) {
+                    startSyncedPlayback();
+                }
+            };
+            
+                    tracks2dElement.addEventListener('loadeddata', loadHandler, { once: true });
+                    videosToLoad.push({ element: tracks2dElement, src: tracks2dSrc });
+                    syncedVideos.slaves.push(tracks2dElement);
+                }
+            }
+        }
+
+        // If no videos to load, return early
+        if (totalVideos === 0) {
+            return;
+        }
+
+        function startSyncedPlayback() {
+            if (!syncedVideos.master || syncedVideos.isSyncing) {
+                return;
+            }
+
+            syncedVideos.isSyncing = true;
+
+            // Sync all videos to master's current time
+            var masterTime = syncedVideos.master.currentTime;
+            syncedVideos.slaves.forEach(function(slave) {
+                if (slave.readyState >= 2) { // HAVE_CURRENT_DATA
+                    try {
+                        slave.currentTime = masterTime;
+                    } catch (e) {
+                        // Video might not be ready yet, ignore
+                        console.log('Could not sync slave video:', e);
+                    }
+                }
+            });
+
+            // Create sync handler
+            syncedVideos.syncHandler = function() {
+                if (!syncedVideos.isSyncing || !syncedVideos.master) {
+                    return;
+                }
+
+                var masterTime = syncedVideos.master.currentTime;
+                var masterPaused = syncedVideos.master.paused;
+
+                // Sync slaves to master
+                syncedVideos.slaves.forEach(function(slave) {
+                    if (slave.readyState >= 2) { // HAVE_CURRENT_DATA
+                        try {
+                            var timeDiff = Math.abs(slave.currentTime - masterTime);
+                            // Only sync if difference is significant (more than 0.1 seconds)
+                            if (timeDiff > 0.1) {
+                                slave.currentTime = masterTime;
+                            }
+                        } catch (e) {
+                            // Video might not be ready, ignore
+                        }
+
+                        // Sync play/pause state
+                        if (masterPaused && !slave.paused) {
+                            slave.pause();
+                        } else if (!masterPaused && slave.paused) {
+                            slave.play().catch(function(error) {
+                                console.log('Slave video play prevented:', error);
+                            });
+                        }
+                    }
+                });
+            };
+
+            // Attach event listeners to master
+            syncedVideos.master.addEventListener('timeupdate', syncedVideos.syncHandler);
+            syncedVideos.master.addEventListener('play', syncedVideos.syncHandler);
+            syncedVideos.master.addEventListener('pause', syncedVideos.syncHandler);
+            syncedVideos.master.addEventListener('seeked', function() {
+                // When master seeks, immediately sync all slaves
+                var masterTime = syncedVideos.master.currentTime;
+                syncedVideos.slaves.forEach(function(slave) {
+                    if (slave.readyState >= 2) {
+                        try {
+                            slave.currentTime = masterTime;
+                        } catch (e) {
+                            // Video might not be ready, ignore
+                        }
+                    }
+                });
+            });
+
+            // Start playback
+            syncedVideos.master.play().catch(function(error) {
+                console.log('Master video autoplay prevented:', error);
+            });
+        }
+    }
+
     function handleSelection(index) {
         var targetThumbnail = thumbnails[index];
 
         $('.thumbnail-item').removeClass('active');
         targetThumbnail.classList.add('active');
 
-        var videoSrc = targetThumbnail.dataset.video;
+        var videoSrc = targetThumbnail.dataset.executionVideo;
         var viserSrc = targetThumbnail.dataset.viser;
         var thumbnailLabel = targetThumbnail.dataset.label;
+        var inputRgbSrc = targetThumbnail.dataset.inputRgb;
+        var generatedVideoSrc = targetThumbnail.dataset.generatedVideo;
+        var videoDepthSrc = targetThumbnail.dataset.videoDepth;
+        var tracks2dSrc = targetThumbnail.getAttribute('data-tracks-2d');
 
+        // Update Robot Execution video
         var videoElement = document.getElementById('main-video');
         videoElement.src = './static/videos/' + videoSrc;
         videoElement.load();
@@ -159,8 +342,18 @@ function initializeVisualizationWidget() {
             });
         });
 
+        // Update Viser iframe
         var viserIframe = document.getElementById('viser-iframe');
         viserIframe.src = viserSrc;
+
+        // Update Input RGB
+        if (inputRgbSrc) {
+            var inputRgbElement = document.getElementById('input-rgb');
+            inputRgbElement.src = './static/images/' + inputRgbSrc;
+        }
+
+        // Update and sync top row videos (Generated Video, Video Depth, 2D Tracks)
+        syncTopRowVideos(generatedVideoSrc, videoDepthSrc, tracks2dSrc);
 
         // Show/hide thumbnails with smooth transitions
         thumbnails.forEach(function(thumb, i) {
@@ -211,6 +404,29 @@ function initializeVisualizationWidget() {
             console.log('Loop play prevented:', error);
         });
     });
+
+    // Add loop handlers for synced videos
+    // The master video (generated-video) controls looping for all synced videos
+    var generatedVideoElement = document.getElementById('generated-video');
+    if (generatedVideoElement) {
+        generatedVideoElement.addEventListener('ended', function() {
+            // Reset all synced videos to start
+            this.currentTime = 0;
+            if (syncedVideos.slaves) {
+                syncedVideos.slaves.forEach(function(slave) {
+                    try {
+                        slave.currentTime = 0;
+                    } catch (e) {
+                        // Video might not be ready, ignore
+                    }
+                });
+            }
+            // Restart playback
+            this.play().catch(function(error) {
+                console.log('Generated video loop play prevented:', error);
+            });
+        });
+    }
 
     $('.thumbnail-item').on('click', function() {
         var clickedIndex = thumbnails.indexOf(this);
