@@ -110,101 +110,191 @@
 
 <div class="rows">
   <div class="container is-max-desktop">
-    <h2 class="title is-3">Generated Video Quality Variation Across Embodiments</h2>
+    <h2 class="title is-3">Generated Video Quality Across Embodiments</h2>
     <div class="content has-text-justified">
       <p>
-        We compare video quality across different state-of-the-art video generation models and embodiments.
-        Each column corresponds to a model, showing three example prompts. The bottom row contains human videos,
-        highlighted with a continuous outline spanning across all three columns.
+        We compare generated video quality across different state-of-the-art video generation models and embodiments.
+        Each column corresponds to a model with each row corresponding to a different embodiment. We notice that for certain tasks,
+        the fine-grained interactions between robot end-effectors and the objects are not realistic and/or the robot fails to complete the task, but the object motion remains reasonable when a human performs the actions.
       </p>
     </div>
-    <div class="columns is-multiline is-mobile is-gapless" style="margin-top: 0.5rem;">
-      <!-- Kling 2.5 Column -->
-      <div class="column is-one-third" style="padding: 0.25rem;">
-        <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
-          <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Kling 2.5</p>
-          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
-            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-              <source src="./static/videos/single_execution/open_oven.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
-            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-              <source src="./static/videos/single_execution/open_drawer.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
-      </div>
+    
+    <!-- Tab buttons -->
+    <div class="tabs is-centered task-tabs-container" style="margin-top: 1rem; margin-bottom: 1rem;">
+      <ul>
+        <li class="task-tab is-active" data-task="task1">
+          <a>
+            <span>Spread Jacket</span>
+          </a>
+        </li>
+        <li class="task-tab" data-task="task2">
+          <a>
+            <span>Close Microwave</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
-      <!-- Veo 3 Column -->
-      <div class="column is-one-third" style="padding: 0.25rem;">
-        <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
-          <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Veo 3</p>
-          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
-            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-              <source src="./static/videos/single_execution/sweep_pasta.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-          </div>
-          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
-            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-              <source src="./static/videos/single_execution/cover_bowl.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
+    <!-- Task 1 Video Grid -->
+    <div id="task1-grid" class="task-video-grid">
+      <div class="columns is-multiline is-variable is-2" style="margin-top: 0.5rem;">
+        <!-- Kling 2.6 Column -->
+        <div class="column is-one-third" style="padding: 0.25rem 0.25rem;">
+          <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+            <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Kling 2.6</p>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/kling/franka.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/kling/spot.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/kling/human.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- Sora 2 Column -->
-      <div class="column is-one-third" style="padding: 0.25rem;">
-        <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
-          <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Sora 2</p>
-          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
-            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-              <source src="./static/videos/single_execution/open_oven.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
+        <!-- Veo 3 Column -->
+        <div class="column is-one-third" style="padding: 0.25rem 0.25rem;">
+          <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+            <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Veo 3.1</p>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/veo/franka.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/veo/spot.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/veo/human.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
-          <div class="column" style="padding: 0; margin-bottom: 0.4rem;">
-            <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-              <source src="./static/videos/single_execution/pull_chair.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
+        </div>
+
+        <!-- Sora 2 Column -->
+        <div class="column is-one-third" style="padding: 0.25rem 0.25rem;">
+          <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+            <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Sora 2</p>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/sora/franka.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/sora/spot.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/pull_up_jacket/sora/human.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Unified bottom row outline across all three columns -->
-    <div class="gv-bottom-outline" style="border: 2px solid #9CA3AF; border-radius: 8px; padding: 0.25rem; margin: 0.4rem 0 0.5rem 0;">
-      <div class="columns is-mobile is-gapless" style="margin: 0;">
-        <div class="column is-one-third" style="padding: 0.25rem;">
-          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-            <source src="./static/videos/single_execution/pull_chair.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+
+    <!-- Task 2 Video Grid -->
+    <div id="task2-grid" class="task-video-grid" style="display: none;">
+      <div class="columns is-multiline is-variable is-2" style="margin-top: 0.5rem;">
+        <!-- Kling 2.6 Column -->
+        <div class="column is-one-third" style="padding: 0.25rem 0.25rem;">
+          <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+            <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Kling 2.6</p>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/kling/franka.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/kling/spot.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/kling/human.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
-        <div class="column is-one-third" style="padding: 0.25rem;">
-          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-            <source src="./static/videos/single_execution/open_drawer.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+
+        <!-- Veo 3 Column -->
+        <div class="column is-one-third" style="padding: 0.25rem 0.25rem;">
+          <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+            <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Veo 3.1</p>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/veo/franka.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/veo/spot.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/veo/human.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
-        <div class="column is-one-third" style="padding: 0.25rem;">
-          <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
-            <source src="./static/videos/single_execution/sweep_pasta.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
+
+        <!-- Sora 2 Column -->
+        <div class="column is-one-third" style="padding: 0.25rem 0.25rem;">
+          <div style="background-color: transparent; padding: 0; border-radius: 0; height: 100%; box-shadow: none;">
+            <p class="has-text-centered" style="font-weight: 600; margin-bottom: 0.5rem;">Sora 2</p>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/sora/franka.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0; margin-bottom: 0.25rem;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/sora/spot.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+            <div class="column" style="padding: 0;">
+              <video playsinline autoplay loop muted width="100%" style="display:block; margin:auto;">
+                <source src="./static/videos/vid_comparison/microwave_close/sora/human.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="content has-text-justified" style="margin-top: 0.5rem;">
-      <p>
-        The outlined bottom row contains human-captured videos for reference. This contrast emphasizes differences
-        in visual fidelity and motion quality between model-generated and human videos across embodiments.
-      </p>
-    </div>
+
   </div>
 </div>
 
@@ -359,47 +449,67 @@
           </div>
 
           <div class="visualization-content">
-            <div class="viser-container">
-              <div class="subsection-heading">
-                <span class="gradient-heading">3D Object Flow</span> from Generated Videos
-              </div>
-              <div class="viser-frame-wrapper">
-                <div class="viser-overlay-badge">
-                  <i class="fas fa-arrows-alt" aria-hidden="true"></i>
-                  <span>Click and move me</span>
+            <!-- First row: Input RGB, Generated Video, Video Depth, 2D Tracks -->
+            <div class="columns is-multiline is-variable is-1" style="margin-bottom: 0.25rem;">
+              <div class="column is-one-quarter">
+                <div class="subsection-heading" style="margin-bottom: 0.5rem; text-align: center;">Input RGB</div>
+                <div style="background: white; border-radius: 8px; padding: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  <img id="input-rgb" src="" alt="Input RGB" style="width: 100%; border-radius: 6px; display: block;">
                 </div>
-                <iframe 
-                  id="viser-iframe"
-                  src="https://dream2flow.github.io/viser/" 
-                  width="100%" 
-                  height="460"
-                  frameborder="0"
-                  allowfullscreen>
-                </iframe>
+              </div>
+              <div class="column is-one-quarter">
+                <div class="subsection-heading" style="margin-bottom: 0.5rem; text-align: center;">Generated Video</div>
+                <div style="background: white; border-radius: 8px; padding: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  <video id="generated-video" autoplay loop muted width="100%" style="display:block; border-radius: 6px;">
+                    <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              </div>
+              <div class="column is-one-quarter">
+                <div class="subsection-heading" style="margin-bottom: 0.5rem; text-align: center;">Video Depth</div>
+                <div style="background: white; border-radius: 8px; padding: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  <img id="video-depth" src="" alt="Video Depth" style="width: 100%; border-radius: 6px; display: block;">
+                </div>
+              </div>
+              <div class="column is-one-quarter">
+                <div class="subsection-heading" style="margin-bottom: 0.5rem; text-align: center;">2D Tracks</div>
+                <div style="background: white; border-radius: 8px; padding: 0.5rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                  <img id="tracks-2d" src="" alt="2D Tracks" style="width: 100%; border-radius: 6px; display: block;">
+                </div>
               </div>
             </div>
 
-            <div class="media-results">
-              <div class="video-panel">
-                <div>
-                  <div class="subsection-heading" style="margin-bottom: 0.7rem; text-align: center;">Robot Execution</div>
-                  <div class="video-container">
-                    <video id="main-video" autoplay loop muted width="100%" height="320">
-                      <source src="./static/videos/video1.mp4" type="video/mp4">
-                      Your browser does not support the video tag.
-                    </video>
+            <!-- Second row: 3D Object Flow (2 columns) + Robot Execution (1 column) -->
+            <div class="columns is-multiline is-variable is-1" style="margin-top: 0.25rem;">
+              <div class="column is-two-thirds">
+                <div class="viser-container" style="padding: 0.5rem;">
+                  <div class="subsection-heading" style="margin-bottom: 0.5rem;">
+                    <span class="gradient-heading">3D Object Flow</span> from Generated Videos
+                  </div>
+                  <div class="viser-frame-wrapper">
+                    <div class="viser-overlay-badge">
+                      <i class="fas fa-arrows-alt" aria-hidden="true"></i>
+                      <span>Click and move me</span>
+                    </div>
+                    <iframe 
+                      id="viser-iframe"
+                      src="https://dream2flow.github.io/viser/" 
+                      width="100%" 
+                      height="320"
+                      frameborder="0"
+                      allowfullscreen>
+                    </iframe>
                   </div>
                 </div>
               </div>
-
-              <div class="results-panel">
-                <div class="results-card">
-                  <h4 class="results-title">Results</h4>
-                  <div class="results-body">
-                    <div class="results-rows-container"></div>
-                    <div class="results-summaries"></div>
-                    <p class="results-empty">No baseline comparisons for this task.</p>
-                  </div>
+              <div class="column is-one-third">
+                <div class="subsection-heading" style="margin-bottom: 0.5rem; text-align: center;">Robot Execution</div>
+                <div class="video-container" style="padding: 0.5rem;">
+                  <video id="main-video" autoplay loop muted width="100%" height="320">
+                    <source src="./static/videos/video1.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
               </div>
             </div>

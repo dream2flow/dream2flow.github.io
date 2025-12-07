@@ -92,6 +92,9 @@ $(document).ready(function() {
     // Robustness Hover Card functionality
     initializeRobustnessHoverCards();
 
+    // Task tab switching functionality
+    initializeTaskTabs();
+
 })
 
 // 3D Flow Visualization Widget Functions
@@ -100,13 +103,7 @@ function initializeVisualizationWidget() {
     var prevButton = document.querySelector('.thumbnail-nav.is-prev');
     var nextButton = document.querySelector('.thumbnail-nav.is-next');
     var dotsContainer = document.querySelector('.thumbnail-dots');
-    var resultsCard = document.querySelector('.results-card');
-    var resultsTitle = document.querySelector('.results-title');
-    var resultsBody = document.querySelector('.results-body');
-    var resultsRowsContainer = document.querySelector('.results-rows-container');
-    var resultsEmpty = document.querySelector('.results-empty');
-    var resultsSummaryContainer = resultsBody ? resultsBody.querySelector('.results-summaries') : null;
-    var visibleRadius = 1;
+    var visibleRadius = 2;
     var activeIndex = 0;
 
     if (!thumbnails.length || !dotsContainer) {
@@ -165,10 +162,10 @@ function initializeVisualizationWidget() {
         var viserIframe = document.getElementById('viser-iframe');
         viserIframe.src = viserSrc;
 
-        updateResultsPanel(targetThumbnail);
-
+        // Show/hide thumbnails with smooth transitions
         thumbnails.forEach(function(thumb, i) {
-            var distance = circularDistance(i, index, thumbnails.length);
+            // Use linear distance instead of circular to avoid wrapping around
+            var distance = Math.abs(i - index);
             var shouldShow = distance <= visibleRadius + 1;
             if (shouldShow) {
                 thumb.classList.remove('is-hidden');
@@ -177,7 +174,10 @@ function initializeVisualizationWidget() {
             }
         });
 
-        targetThumbnail.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        // Wait for opacity transition (200ms) before scrolling for smoother animation
+        setTimeout(function() {
+            targetThumbnail.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }, 50);
 
         activeIndex = index;
         updateDots(activeIndex);
@@ -185,120 +185,6 @@ function initializeVisualizationWidget() {
 
     function getNextIndex(direction) {
         return (activeIndex + direction + thumbnails.length) % thumbnails.length;
-    }
-
-    function updateResultsPanel(thumbnailEl) {
-        if (!resultsCard) {
-            return;
-        }
-
-        resultsRowsContainer.innerHTML = '';
-        if (resultsSummaryContainer) {
-            resultsSummaryContainer.innerHTML = '';
-        }
-
-        var hasResults = thumbnailEl.dataset.results === 'true';
-        var summaryText = thumbnailEl.dataset.summary || '';
-        var emptyMessage = thumbnailEl.dataset.empty_message || 'No baseline comparisons for this task.';
-        var resultsDataRaw = thumbnailEl.dataset.results_data;
-        var resultsData = [];
-
-        if (resultsDataRaw) {
-            try {
-                resultsData = JSON.parse(resultsDataRaw);
-            } catch (error) {
-                console.warn('Failed to parse results data', error);
-            }
-        }
-
-        if (hasResults && resultsData.length) {
-            resultsCard.classList.remove('is-hidden');
-            resultsTitle.textContent = thumbnailEl.dataset.resultsTitle || 'Results';
-
-            // Create each row
-            resultsData.forEach(function(rowData) {
-                var rowDiv = document.createElement('div');
-                rowDiv.className = 'results-row';
-
-                // Add row title if provided
-                if (rowData.rowTitle) {
-                    var rowTitle = document.createElement('div');
-                    rowTitle.className = 'results-row-title';
-                    rowTitle.textContent = rowData.rowTitle;
-                    rowDiv.appendChild(rowTitle);
-                }
-
-                // Create list for this row
-                var rowList = document.createElement('ul');
-                rowList.className = 'results-list';
-
-                var methods = rowData.methods || [];
-
-                // Find the highest score in this row
-                var maxScore = -1;
-                methods.forEach(function(item) {
-                    var scoreValue = parseScore(item.score);
-                    if (scoreValue > maxScore) {
-                        maxScore = scoreValue;
-                    }
-                });
-
-                // Create list items for each method
-                methods.forEach(function(item) {
-                    var li = document.createElement('li');
-                    var scoreValue = parseScore(item.score);
-                    
-                    // Add best-result class if this is the highest score in this row
-                    if (scoreValue === maxScore) {
-                        li.classList.add('best-result');
-                    }
-
-                    // Get link from centralized METHOD_LINKS mapping
-                    var methodLink = METHOD_LINKS[item.name];
-                    
-                    // Add click handler with link (only if link exists)
-                    if (methodLink) {
-                        li.addEventListener('click', function() {
-                            window.open(methodLink, '_blank');
-                        });
-                    } else {
-                        // No link available, remove cursor pointer for this item
-                        li.style.cursor = 'default';
-                    }
-                    
-                    var nameSpan = document.createElement('span');
-                    nameSpan.className = 'method-name';
-                    nameSpan.textContent = item.name;
-                    
-                    var scoreSpan = document.createElement('span');
-                    scoreSpan.className = 'method-score';
-                    scoreSpan.textContent = item.score;
-                    
-                    li.appendChild(nameSpan);
-                    li.appendChild(scoreSpan);
-                    rowList.appendChild(li);
-                });
-
-                rowDiv.appendChild(rowList);
-                resultsRowsContainer.appendChild(rowDiv);
-            });
-
-            resultsEmpty.style.display = 'none';
-
-            if (summaryText) {
-                if (resultsSummaryContainer) {
-                    var summaryParagraph = document.createElement('p');
-                    summaryParagraph.className = 'results-summary';
-                    summaryParagraph.textContent = summaryText;
-                    resultsSummaryContainer.appendChild(summaryParagraph);
-                }
-            }
-        } else {
-            resultsCard.classList.remove('is-hidden');
-            resultsTitle.textContent = thumbnailEl.dataset.resultsTitle || 'Results';
-            resultsEmpty.textContent = emptyMessage;
-            resultsEmpty.style.display = 'block';
-        }
     }
 
     function updateActiveThumbnail(index, forceUpdate) {
@@ -501,5 +387,47 @@ function initializeRobustnessHoverCards() {
     
     $('.robustness-video-wrapper').on('mouseleave', function() {
         hideHoverCard();
+    });
+}
+
+// Task Tab Switching Functionality
+function initializeTaskTabs() {
+    var taskTabs = document.querySelectorAll('.task-tab');
+    var taskGrids = {
+        'task1': document.getElementById('task1-grid'),
+        'task2': document.getElementById('task2-grid')
+    };
+
+    if (!taskTabs.length || !taskGrids.task1 || !taskGrids.task2) {
+        return;
+    }
+
+    function switchTask(selectedTask) {
+        // Update tab states
+        taskTabs.forEach(function(tab) {
+            if (tab.dataset.task === selectedTask) {
+                tab.classList.add('is-active');
+            } else {
+                tab.classList.remove('is-active');
+            }
+        });
+
+        // Update grid visibility
+        Object.keys(taskGrids).forEach(function(task) {
+            if (task === selectedTask) {
+                taskGrids[task].style.display = 'block';
+            } else {
+                taskGrids[task].style.display = 'none';
+            }
+        });
+    }
+
+    // Add click handlers to tabs
+    taskTabs.forEach(function(tab) {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            var task = tab.dataset.task;
+            switchTask(task);
+        });
     });
 }
