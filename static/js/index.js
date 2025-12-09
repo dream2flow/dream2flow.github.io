@@ -122,6 +122,9 @@ $(document).ready(function() {
     // Task tab switching functionality
     initializeTaskTabs();
 
+    // Video zoom functionality for comparison videos
+    initializeVideoZoom();
+
 })
 
 // 3D Flow Visualization Widget Functions
@@ -685,5 +688,160 @@ function initializeTaskTabs() {
             var task = tab.dataset.task;
             switchTask(task);
         });
+    });
+}
+
+// Video Zoom Functionality
+function initializeVideoZoom() {
+    // Create zoom lens element
+    var zoomLens = $('<div class="video-zoom-lens"></div>');
+    var zoomCanvas = $('<canvas></canvas>');
+    zoomLens.append(zoomCanvas);
+    $('body').append(zoomLens);
+    
+    var canvas = zoomCanvas[0];
+    var ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    var lensSize = 250;
+    canvas.width = lensSize;
+    canvas.height = lensSize;
+    
+    var zoomFactor = 1.00;
+    var currentVideo = null;
+    var animationFrameId = null;
+    
+    function showZoomLens(video, e) {
+        currentVideo = video;
+        
+        // Position lens near cursor
+        positionZoomLens(e);
+        
+        // Show lens
+        zoomLens.addClass('visible');
+        
+        // Start animation loop for drawing zoomed video
+        if (!animationFrameId) {
+            animationFrameId = requestAnimationFrame(drawZoom);
+        }
+    }
+    
+    function hideZoomLens() {
+        zoomLens.removeClass('visible');
+        currentVideo = null;
+        
+        if (animationFrameId) {
+            cancelAnimationFrame(animationFrameId);
+            animationFrameId = null;
+        }
+    }
+    
+    function positionZoomLens(e) {
+        var offsetX = 15;
+        
+        // Use viewport-relative coordinates
+        var cursorX = e.clientX;
+        var cursorY = e.clientY;
+        
+        var posX = cursorX + offsetX;
+        var posY = cursorY - Math.round(lensSize / 2);
+        
+        // Keep lens within viewport
+        var windowWidth = $(window).width();
+        var windowHeight = $(window).height();
+        
+        // Horizontal overflow handling - use same offset when flipping to left for consistency
+        if (posX + lensSize > windowWidth - 20) {
+            posX = cursorX - lensSize - offsetX;
+        }
+        
+        // Vertical clamping
+        if (posY < 20) {
+            posY = 20;
+        } else if (posY + lensSize > windowHeight - 20) {
+            posY = windowHeight - lensSize - 20;
+        }
+        
+        zoomLens.css({
+            left: posX + 'px',
+            top: posY + 'px'
+        });
+    }
+    
+    var lastMouseEvent = null;
+    
+    function drawZoom() {
+        if (!currentVideo || !lastMouseEvent) {
+            animationFrameId = null;
+            return;
+        }
+        
+        // Get video element position and size
+        var videoRect = currentVideo.getBoundingClientRect();
+        var videoWidth = currentVideo.videoWidth;
+        var videoHeight = currentVideo.videoHeight;
+        
+        if (videoWidth === 0 || videoHeight === 0) {
+            animationFrameId = requestAnimationFrame(drawZoom);
+            return;
+        }
+        
+        // Calculate mouse position relative to video
+        var mouseX = lastMouseEvent.clientX - videoRect.left;
+        var mouseY = lastMouseEvent.clientY - videoRect.top;
+        
+        // Convert to video coordinates
+        var scaleX = videoWidth / videoRect.width;
+        var scaleY = videoHeight / videoRect.height;
+        
+        var videoMouseX = mouseX * scaleX;
+        var videoMouseY = mouseY * scaleY;
+        
+        // Calculate the region to zoom
+        var zoomRegionWidth = lensSize / zoomFactor;
+        var zoomRegionHeight = lensSize / zoomFactor;
+        
+        var sourceX = videoMouseX - zoomRegionWidth / 2;
+        var sourceY = videoMouseY - zoomRegionHeight / 2;
+        
+        // Clamp source coordinates to video bounds
+        sourceX = Math.max(0, Math.min(sourceX, videoWidth - zoomRegionWidth));
+        sourceY = Math.max(0, Math.min(sourceY, videoHeight - zoomRegionHeight));
+        
+        // Clear canvas
+        ctx.clearRect(0, 0, lensSize, lensSize);
+        
+        // Draw zoomed video region
+        try {
+            ctx.drawImage(
+                currentVideo,
+                sourceX, sourceY, zoomRegionWidth, zoomRegionHeight,
+                0, 0, lensSize, lensSize
+            );
+        } catch (e) {
+            // Video might not be ready yet
+            console.log('Could not draw video:', e);
+        }
+        
+        // Continue animation loop
+        animationFrameId = requestAnimationFrame(drawZoom);
+    }
+    
+    // Attach event handlers to comparison grid videos
+    var comparisonVideos = $('#task1-grid video, #task2-grid video');
+    
+    comparisonVideos.on('mouseenter', function(e) {
+        showZoomLens(this, e);
+    });
+    
+    comparisonVideos.on('mousemove', function(e) {
+        if (currentVideo === this) {
+            lastMouseEvent = e;
+            positionZoomLens(e);
+        }
+    });
+    
+    comparisonVideos.on('mouseleave', function() {
+        hideZoomLens();
     });
 }
