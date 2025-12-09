@@ -511,13 +511,13 @@
             </div>
 
             <!-- Second row: 3D Object Flow (2 columns) + Robot Execution (1 column) -->
-            <div class="columns is-multiline is-variable is-1" style="margin-top: 0.25rem;">
-              <div class="column is-two-thirds">
-                <div class="viser-container" style="padding: 0.5rem;">
+            <div class="columns is-multiline is-variable is-1" style="margin-top: 0; display: flex;">
+              <div class="column is-half" style="display: flex;">
+                <div class="viser-container" style="padding: 0.5rem; display: flex; flex-direction: column; height: 100%; flex: 1; width: 100%;">
                   <div class="subsection-heading" style="margin-bottom: 0.5rem; text-align: center;">
                     <span class="gradient-heading">3D Object Flow</span> from Generated Videos
                   </div>
-                  <div class="viser-frame-wrapper">
+                  <div class="viser-frame-wrapper" style="flex: 1;">
                     <div class="viser-overlay-badge">
                       <i class="fas fa-arrows-alt" aria-hidden="true"></i>
                       <span>Click and move me</span>
@@ -533,13 +533,15 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-one-third">
-                <div class="subsection-heading" style="margin-bottom: 0.5rem; text-align: center;">Robot Execution</div>
-                <div class="video-container" style="padding: 0.5rem;">
-                  <video id="main-video" autoplay loop muted width="100%" height="320">
-                    <source src="./static/videos/video1.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                  </video>
+              <div class="column is-half" style="display: flex;">
+                <div class="video-container" style="padding: 0.5rem; display: flex; flex-direction: column; height: 100%; flex: 1; width: 100%;">
+                  <div class="subsection-heading" style="margin-bottom: 0.5rem; text-align: center;">Robot Execution</div>
+                  <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                    <video id="main-video" autoplay loop muted width="100%" height="320">
+                      <source src="./static/videos/video1.mp4" type="video/mp4">
+                      Your browser does not support the video tag.
+                    </video>
+                  </div>
                 </div>
               </div>
             </div>
