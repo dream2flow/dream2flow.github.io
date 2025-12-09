@@ -1,5 +1,10 @@
 window.HELP_IMPROVE_VIDEOJS = false;
 
+// Prevent auto-scroll on page load
+if (history.scrollRestoration) {
+    history.scrollRestoration = 'manual';
+}
+
 var INTERP_BASE = "./static/interpolation/stacked";
 var NUM_INTERP_FRAMES = 240;
 
@@ -32,6 +37,28 @@ function setInterpolationImage(i) {
 
 
 $(document).ready(function() {
+    // Force scroll to top immediately
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    
+    // Lock scroll position during initialization
+    var scrollLocked = true;
+    var scrollLockHandler = function(e) {
+        if (scrollLocked) {
+            window.scrollTo(0, 0);
+            e.preventDefault();
+        }
+    };
+    
+    window.addEventListener('scroll', scrollLockHandler, { passive: false });
+    
+    // Unlock scroll after initialization completes
+    setTimeout(function() {
+        scrollLocked = false;
+        window.removeEventListener('scroll', scrollLockHandler);
+    }, 500);
+    
     // Check for click events on the navbar burger icon
     $(".navbar-burger").click(function() {
       // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
@@ -117,7 +144,7 @@ function initializeVisualizationWidget() {
         dot.type = 'button';
         dot.setAttribute('aria-label', 'Scene ' + (idx + 1));
         dot.addEventListener('click', function() {
-            updateActiveThumbnail(idx, true);
+            updateActiveThumbnail(idx, true, false);
         });
         dotsContainer.appendChild(dot);
     });
@@ -317,7 +344,7 @@ function initializeVisualizationWidget() {
         }
     }
 
-    function handleSelection(index) {
+    function handleSelection(index, isInitialLoad) {
         var targetThumbnail = thumbnails[index];
 
         $('.thumbnail-item').removeClass('active');
@@ -344,7 +371,19 @@ function initializeVisualizationWidget() {
 
         // Update Viser iframe
         var viserIframe = document.getElementById('viser-iframe');
+        // Store current scroll position to prevent unwanted scrolling
+        var scrollX = window.scrollX;
+        var scrollY = window.scrollY;
         viserIframe.src = viserSrc;
+        // Restore scroll position immediately after setting src
+        if (isInitialLoad) {
+            // Force to top on initial load
+            requestAnimationFrame(function() {
+                window.scrollTo(0, 0);
+            });
+        } else {
+            window.scrollTo(scrollX, scrollY);
+        }
 
         // Update Input RGB
         if (inputRgbSrc) {
@@ -380,20 +419,20 @@ function initializeVisualizationWidget() {
         return (activeIndex + direction + thumbnails.length) % thumbnails.length;
     }
 
-    function updateActiveThumbnail(index, forceUpdate) {
+    function updateActiveThumbnail(index, forceUpdate, isInitialLoad) {
         if (!forceUpdate && index === activeIndex) {
             return;
         }
-        handleSelection(index);
+        handleSelection(index, isInitialLoad);
     }
 
     if (prevButton && nextButton) {
         prevButton.addEventListener('click', function() {
-            updateActiveThumbnail(getNextIndex(-1), true);
+            updateActiveThumbnail(getNextIndex(-1), true, false);
         });
 
         nextButton.addEventListener('click', function() {
-            updateActiveThumbnail(getNextIndex(1), true);
+            updateActiveThumbnail(getNextIndex(1), true, false);
         });
     }
 
@@ -430,10 +469,11 @@ function initializeVisualizationWidget() {
 
     $('.thumbnail-item').on('click', function() {
         var clickedIndex = thumbnails.indexOf(this);
-        updateActiveThumbnail(clickedIndex, true);
+        updateActiveThumbnail(clickedIndex, true, false);
     });
 
-    handleSelection(0);
+    // Initial selection - mark as initial load to prevent scrolling
+    handleSelection(0, true);
 }
 
 // Helper function to parse scores from various formats (e.g., "90%", "7/10", "0.9")
