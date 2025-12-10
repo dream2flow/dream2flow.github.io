@@ -914,3 +914,179 @@ hr.rounded {
     width: 200px;
     height: 200px;
 }
+
+/* Failure Modes Section Styles */
+.failure-modes-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-top: 1.5rem;
+}
+
+.sankey-column {
+    flex: 1;
+    min-width: 0;
+    max-width: 55%;
+    display: flex;
+    flex-direction: column;
+}
+
+.click-instruction {
+    text-align: center;
+    margin: 0 0 0.5rem 0;
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #555;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.click-instruction i {
+    color: #e15759;
+    font-size: 1.1rem;
+}
+
+.sankey-container {
+    flex: 1;
+    min-width: 0;
+}
+
+.sankey-container svg {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Clickable endpoint styles */
+.sankey-endpoint,
+.sankey-label-endpoint {
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.sankey-endpoint rect.sankey-clickable,
+.sankey-label-endpoint rect.sankey-clickable {
+    transition: all 0.2s ease;
+}
+
+.sankey-endpoint:hover rect.sankey-clickable,
+.sankey-label-endpoint:hover rect.sankey-clickable {
+    filter: brightness(1.1);
+    stroke: #333;
+    stroke-width: 2px;
+}
+
+.sankey-label-endpoint:hover text.sankey-clickable,
+.sankey-label-endpoint:hover text.sankey-clickable tspan {
+    font-weight: 600;
+}
+
+.sankey-label-endpoint.active text.sankey-clickable,
+.sankey-label-endpoint.active text.sankey-clickable tspan {
+    font-weight: 700 !important;
+}
+
+/* Add a highlight glow to active elements */
+.sankey-endpoint.active rect.sankey-clickable {
+    filter: brightness(1.1) drop-shadow(0 0 4px rgba(225, 87, 89, 0.5));
+    stroke: #000;
+    stroke-width: 2px;
+}
+
+.sankey-label-endpoint.active rect.sankey-clickable {
+    fill: #fef2f2 !important;
+    fill-opacity: 1 !important;
+    stroke: #e15759;
+    stroke-width: 3px;
+    filter: drop-shadow(0 2px 8px rgba(225, 87, 89, 0.4));
+}
+
+/* Dim non-active endpoints when one is selected */
+.sankey-container.has-selection .sankey-endpoint:not(.active),
+.sankey-container.has-selection .sankey-label-endpoint:not(.active) {
+    opacity: 0.4;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.sankey-container.has-selection .sankey-endpoint:not(.active):hover,
+.sankey-container.has-selection .sankey-label-endpoint:not(.active):hover {
+    opacity: 0.75;
+}
+
+/* Failure Detail Panel */
+.failure-detail-panel {
+    flex: 1;
+    min-width: 0;
+    max-width: 45%;
+}
+
+.failure-detail-content {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e6e6e6;
+}
+
+.failure-detail-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #e15759;
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+.failure-detail-description {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+.failure-detail-video-container {
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f5f5f5;
+}
+
+.failure-detail-video-container video {
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+}
+
+.failure-video-caption {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #555;
+    font-style: italic;
+    margin-top: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+/* Responsive layout for failure modes */
+@media screen and (max-width: 900px) {
+    .failure-modes-container {
+        flex-direction: column;
+    }
+
+    .sankey-column,
+    .failure-detail-panel {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .sankey-column {
+        order: 1;
+    }
+
+    .failure-detail-panel {
+        order: 2;
+    }
+}

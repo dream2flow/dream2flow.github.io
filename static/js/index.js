@@ -125,6 +125,9 @@ $(document).ready(function() {
     // Video zoom functionality for comparison videos
     initializeVideoZoom();
 
+    // Failure modes Sankey diagram functionality
+    initializeFailureModes();
+
 })
 
 // 3D Flow Visualization Widget Functions
@@ -844,4 +847,99 @@ function initializeVideoZoom() {
     comparisonVideos.on('mouseleave', function() {
         hideZoomLens();
     });
+}
+
+// Failure Modes Sankey Diagram Functionality
+function initializeFailureModes() {
+    var sankeyContainer = document.querySelector('.sankey-container');
+    var failureTitle = document.getElementById('failure-title');
+    var failureDescription = document.getElementById('failure-description');
+    var failureVideo = document.getElementById('failure-video');
+    var failureVideoSource = document.getElementById('failure-video-source');
+    var failureCaption = document.getElementById('failure-caption');
+
+    if (!sankeyContainer || !failureTitle || !failureDescription || !failureVideo) {
+        return;
+    }
+
+    // Failure mode data
+    var failureModes = {
+        'object_morphing': {
+            title: 'Object Morphing',
+            description: 'The video generation model substantially changes the shape or appearance of the object, making 2D tracking fail.',
+            video: './static/videos/failures/object_morphing.mp4',
+            caption: 'The bread morphs into a stack of crackers in the generated video.'
+        },
+        'hallucination': {
+            title: 'Hallucination',
+            description: 'The video generation model creates unrealistic or physically impossible scenarios, such as new objects magically appearing. These hallucinations make the generated motion unsuitable for robot execution.',
+            video: './static/videos/failures/hallucination.mp4',
+            caption: 'A new bowl appears out of thin air in the generated video.'
+        },
+        'flow_extraction': {
+            title: 'Flow Extraction Failures',
+            description: 'The 3D flow extraction pipeline fails to accurately generate 3D flow from the generated video. This can occur due to 2D tracking failures from severe occlusions, certain rotations, or incorrect masks.',
+            video: './static/videos/failures/flow_extraction.mp4',
+            caption: '2D tracking fails due to challenging rotation of the bread in the generated video. The open circles indicate occlusion and will not be used when lifted into 3D.'
+        },
+        'robot_execution': {
+            title: 'Robot Execution Failures',
+            description: 'The robot fails to successfully plan or execute the trajectory despite having reasonable 3D object flow. This can occur due to a missed grasp, misplaced grasp, or a limitation of the rigid-grasp dynamics model.',
+            video: './static/videos/failures/robot_execution.mp4',
+            caption: 'The selected grasp pose and rigid-grasp dynamics model plan and execute a motion that misses the bowl.'
+        }
+    };
+
+    // Get all clickable endpoint elements (both node rects and labels)
+    var endpoints = sankeyContainer.querySelectorAll('.sankey-endpoint, .sankey-label-endpoint');
+    var currentSelection = 'object_morphing'; // Default selection
+
+    function selectFailureMode(failureType) {
+        if (!failureModes[failureType]) {
+            return;
+        }
+
+        currentSelection = failureType;
+        var data = failureModes[failureType];
+
+        // Update content
+        failureTitle.textContent = data.title;
+        failureDescription.textContent = data.description;
+        
+        // Update video
+        failureVideoSource.src = data.video;
+        failureVideo.load();
+        failureVideo.play().catch(function(error) {
+            console.log('Failure video autoplay prevented:', error);
+        });
+
+        // Update caption
+        if (failureCaption) {
+            failureCaption.textContent = data.caption;
+        }
+
+        // Update active states
+        endpoints.forEach(function(endpoint) {
+            var endpointFailure = endpoint.getAttribute('data-failure');
+            if (endpointFailure === failureType) {
+                endpoint.classList.add('active');
+            } else {
+                endpoint.classList.remove('active');
+            }
+        });
+
+        // Add selection class to container
+        sankeyContainer.classList.add('has-selection');
+    }
+
+    // Add click handlers to endpoints
+    endpoints.forEach(function(endpoint) {
+        endpoint.addEventListener('click', function() {
+            var failureType = this.getAttribute('data-failure');
+            selectFailureMode(failureType);
+        });
+    });
+
+    // Initialize with default selection
+    selectFailureMode('object_morphing');
 }
