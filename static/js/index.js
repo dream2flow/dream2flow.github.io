@@ -128,6 +128,9 @@ $(document).ready(function() {
     // Failure modes Sankey diagram functionality
     initializeFailureModes();
 
+    // Interactive method diagram functionality
+    initializeMethodDiagram();
+
 })
 
 // 3D Flow Visualization Widget Functions
@@ -942,4 +945,174 @@ function initializeFailureModes() {
 
     // Initialize with default selection
     selectFailureMode('object_morphing');
+}
+
+// Interactive Method Diagram Functionality
+function initializeMethodDiagram() {
+    var hotspots = document.querySelectorAll('.method-hotspot');
+    var explanationCard = document.getElementById('method-explanation-card');
+    var explanationTitle = document.getElementById('method-explanation-title');
+    var explanationContent = document.getElementById('method-explanation-content');
+    var closeButton = document.getElementById('method-explanation-close');
+
+    if (!hotspots.length || !explanationCard) {
+        return;
+    }
+
+    // Component explanations data
+    var componentData = {
+        'inputs': {
+            title: 'Inputs: Task Instruction & RGB-D Observation',
+            content: 'The pipeline starts with two inputs: a <strong>natural language task instruction</strong> (e.g., "Put the bread in the bowl") and an <strong>RGB-D observation</strong> from the robot\'s camera. The RGB image provides visual context, while the depth channel (D) captures 3D geometry of the scene. These inputs define what the robot should do and the initial state of the environment.',
+            highlightResults: true
+        },
+        'video-gen': {
+            title: 'Video Generation Model',
+            content: 'A state-of-the-art <strong>image-to-video generation model</strong> takes the initial RGB image and task instruction to synthesize a video showing how a human would perform the task. This leverages the model\'s learned understanding of object interactions and physics from large-scale video training data, providing plausible motion trajectories without requiring robot-specific training.',
+            highlightResults: true
+        },
+        'video-frames': {
+            title: 'Video Frames',
+            content: 'The video generation model outputs a sequence of <strong>video frames</strong> depicting the task being performed (typically by imagining human hands). Each frame captures the progressive state of objects as they move according to the task instruction. These frames serve as the source for extracting object motion information.',
+            highlightResults: true
+        },
+        'mask': {
+            title: 'Object Mask',
+            content: 'A <strong>segmentation model</strong> (such as SAM) generates object masks that identify which pixels belong to the object of interest in each frame. These masks are essential for isolating the object\'s motion from background elements and ensuring accurate tracking of the relevant object throughout the video.',
+            highlightResults: false
+        },
+        'video-depth': {
+            title: 'Video Depth',
+            content: 'A <strong>monocular depth estimation model</strong> predicts depth maps for each generated video frame. Combined with the initial RGB-D observation\'s known scale, these depth estimates allow lifting 2D pixel motions into 3D space. This is crucial for understanding the full 3D trajectory of objects.',
+            highlightResults: true
+        },
+        '2d-tracks': {
+            title: '2D Point Tracking',
+            content: '<strong>Point tracking models</strong> (such as CoTracker) follow individual points on the object across all video frames. These 2D trajectories capture how each sampled point on the object moves through the video. The tracks provide dense motion information that, when combined with depth, yields 3D motion.',
+            highlightResults: true
+        },
+        '3d-flow': {
+            title: '3D Object Flow',
+            content: 'By combining 2D point tracks, depth estimates, object masks, and camera intrinsics, we reconstruct the <strong>3D object flow</strong>—the full 3D trajectory of points on the object over time. This representation captures how the object should move in 3D space to complete the task, serving as the target for robot control.',
+            highlightResults: true
+        },
+        'controller': {
+            title: 'Model-Based Controller',
+            content: 'A <strong>trajectory optimization-based controller</strong> takes the 3D object flow and computes robot actions to track it. The controller uses a dynamics model to predict how robot actions affect object motion, then optimizes to find actions that make the real object follow the desired 3D trajectory. This produces executable low-level commands for the robot.',
+            highlightResults: true
+        }
+    };
+
+    var currentSelection = null;
+    var currentHighlight = null;
+
+    function clearHighlight() {
+        if (currentHighlight) {
+            currentHighlight.classList.remove('results-highlight');
+            currentHighlight = null;
+        }
+    }
+
+    function highlightResultsElement(elementId) {
+        clearHighlight();
+        
+        if (!elementId) return;
+
+        var element = document.getElementById(elementId);
+        if (element) {
+            // Find the parent container for better visual highlighting
+            var container = element.closest('.column');
+            if (container) {
+                currentHighlight = container;
+            } else {
+                currentHighlight = element;
+            }
+            currentHighlight.classList.add('results-highlight');
+            // No auto-scroll - user requested removal
+        }
+    }
+
+    function selectComponent(component) {
+        var data = componentData[component];
+        if (!data) return;
+
+        // Update active state on hotspots
+        hotspots.forEach(function(hotspot) {
+            if (hotspot.dataset.component === component) {
+                hotspot.classList.add('active');
+            } else {
+                hotspot.classList.remove('active');
+            }
+        });
+
+        // Update explanation card
+        explanationTitle.textContent = data.title;
+        explanationContent.innerHTML = data.content;
+        explanationCard.classList.add('visible');
+
+        currentSelection = component;
+
+        // Highlight corresponding results element
+        var hotspot = document.querySelector('.method-hotspot[data-component="' + component + '"]');
+        if (hotspot && data.highlightResults) {
+            var highlightTarget = hotspot.dataset.highlightResults;
+            highlightResultsElement(highlightTarget);
+        } else {
+            clearHighlight();
+        }
+    }
+
+    function closeExplanation() {
+        explanationCard.classList.remove('visible');
+        hotspots.forEach(function(hotspot) {
+            hotspot.classList.remove('active');
+        });
+        currentSelection = null;
+        clearHighlight();
+    }
+
+    // Add click handlers to hotspots
+    hotspots.forEach(function(hotspot) {
+        // Add visual indicator for components that highlight results
+        if (hotspot.dataset.highlightResults) {
+            hotspot.classList.add('can-highlight-results');
+        }
+
+        hotspot.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var component = this.dataset.component;
+            
+            if (currentSelection === component) {
+                // Clicking same component closes it
+                closeExplanation();
+            } else {
+                selectComponent(component);
+            }
+        });
+    });
+
+    // Close button handler
+    if (closeButton) {
+        closeButton.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeExplanation();
+        });
+    }
+
+    // Close when clicking outside
+    document.addEventListener('click', function(e) {
+        if (explanationCard.classList.contains('visible')) {
+            if (!explanationCard.contains(e.target) && !e.target.closest('.method-hotspot')) {
+                closeExplanation();
+            }
+        }
+    });
+
+    // Handle escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && explanationCard.classList.contains('visible')) {
+            closeExplanation();
+        }
+    });
 }

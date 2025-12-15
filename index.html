@@ -301,8 +301,87 @@
 <div class="rows">
   <div class="container is-max-desktop">
     <h2 class="title is-3">Dream2Flow</h2>
-    <img src="./static/images/method.png" class="method-image" />
-    <p class="content has-text-justified">Given a task instruction and an initial RGB-D observation, an image-to-video model synthesizes video frames conditioned on the instruction. We additionally obtain object masks, video depth, and point tracking from vision foundation models, which are used to reconstruct 3D object flow. 
+    
+    <!-- Interactive Method Diagram -->
+    <div class="method-interactive-container">
+      <div class="method-click-instruction">
+        <i class="fas fa-mouse-pointer"></i>
+        <span>Click on different components to learn more about the pipeline</span>
+      </div>
+      
+      <div class="method-interactive-wrapper">
+        <img src="./static/images/method.png" class="method-image" alt="Dream2Flow Method Overview" />
+        
+        <!-- Overlay with clickable hotspots - positions calibrated for 1747x371 image -->
+        <div class="method-overlay">
+          <!-- Inputs section: Task instruction + RGB-D observation (leftmost) -->
+          <div class="method-hotspot" 
+               data-component="inputs"
+               data-highlight-results="input-rgb"
+               style="left: 0%; top: 5%; width: 11%; height: 90%;">
+          </div>
+          
+          <!-- Video Generation Models (stacked top) -->
+          <div class="method-hotspot" 
+               data-component="video-gen"
+               data-highlight-results="generated-video"
+               style="left: 12%; top: 5%; width: 12%; height: 45%;">
+          </div>
+          
+          <!-- Mask (stacked bottom, below Video Generation Models) -->
+          <div class="method-hotspot" 
+               data-component="mask"
+               style="left: 12%; top: 52%; width: 12%; height: 43%;">
+          </div>
+          
+          <!-- Video Frames (full height) -->
+          <div class="method-hotspot" 
+               data-component="video-frames"
+               data-highlight-results="generated-video"
+               style="left: 25%; top: 5%; width: 12%; height: 90%;">
+          </div>
+          
+          <!-- Video Depth (middle of the trio on right) -->
+          <div class="method-hotspot" 
+               data-component="video-depth"
+               data-highlight-results="video-depth"
+               style="left: 38%; top: 3%; width: 12%; height: 30%;">
+          </div>
+          
+          <!-- 2D Tracks (bottom of the trio) -->
+          <div class="method-hotspot" 
+               data-component="2d-tracks"
+               data-highlight-results="tracks-2d"
+               style="left: 38%; top: 35%; width: 12%; height: 30%;">
+          </div>
+          
+          <!-- 3D Object Flow -->
+          <div class="method-hotspot" 
+               data-component="3d-flow"
+               data-highlight-results="viser-iframe"
+               style="left: 51%; top: 10%; width: 19%; height: 80%;">
+          </div>
+          
+          <!-- Model-Based Controller -->
+          <div class="method-hotspot" 
+               data-component="controller"
+               data-highlight-results="main-video"
+               style="left: 71%; top: 10%; width: 15%; height: 80%;">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Explanation Card -->
+      <div class="method-explanation-card" id="method-explanation-card">
+        <div class="method-explanation-header">
+          <h4 class="method-explanation-title" id="method-explanation-title"></h4>
+          <button class="method-explanation-close" id="method-explanation-close" aria-label="Close">&times;</button>
+        </div>
+        <div class="method-explanation-content" id="method-explanation-content"></div>
+      </div>
+    </div>
+    
+    <p class="content has-text-justified" style="margin-top: 1rem;">Given a task instruction and an initial RGB-D observation, an image-to-video model synthesizes video frames conditioned on the instruction. We additionally obtain object masks, video depth, and point tracking from vision foundation models, which are used to reconstruct 3D object flow. 
       Finally, a model-based controller tracks the 3D object flow to generate executable actions.
     </p>
   </div>
@@ -432,9 +511,9 @@
                     <div class="thumbnail-item" 
                          data-label="Open Drawer" 
                          data-execution-video="single_execution/open_drawer.mp4" 
-                         data-viser="viser/client/?playbackPath=../recordings/open_drawer.viser&initialCameraPosition=-0.166,0.555,0.394&initialCameraLookAt=0.586,0.084,-0.086&initialCameraUp=0.000,0.000,1.000&fixedDpr=1.5"
+                         data-viser="viser/client/?playbackPath=../recordings/open_drawer.viser&initialCameraPosition=0.141,0.274,0.346&initialCameraLookAt=0.605,0.116,0.006&initialCameraUp=-0.000,0.000,1.000&fixedDpr=1.5"
                          data-empty_message="In-the-wild manipulation demo."
-                         data-input-rgb="input_rgb/open_drawer.png"
+                         data-input-rgb="input_rgb/pull_drawer.png"
                          data-generated-video="task_generated_videos/open_drawer.mp4"
                          data-video-depth="task_depth/open_drawer.mp4"
                          data-tracks-2d="task_tracks/open_drawer.mp4">
@@ -443,7 +522,7 @@
                     <div class="thumbnail-item" 
                          data-label="Sweep Pasta" 
                          data-execution-video="single_execution/sweep_pasta.mp4" 
-                         data-viser="viser/client/?playbackPath=../recordings/sweep_pasta.viser&initialCameraPosition=-0.362,0.531,0.726&initialCameraLookAt=0.515,0.462,-0.000&initialCameraUp=0.000,0.000,1.000&fixedDpr=1.5"
+                         data-viser="viser/client/?playbackPath=../recordings/sweep_pasta.viser&initialCameraPosition=0.272,0.016,0.590&initialCameraLookAt=0.605,0.116,0.006&initialCameraUp=-0.000,0.000,1.000&fixedDpr=1.5"
                          data-empty_message="In-the-wild manipulation demo."
                          data-input-rgb="input_rgb/sweep_pasta.png"
                          data-generated-video="task_generated_videos/sweep_pasta.mp4"
