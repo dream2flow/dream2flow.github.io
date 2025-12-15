@@ -963,42 +963,42 @@ function initializeMethodDiagram() {
     var componentData = {
         'inputs': {
             title: 'Inputs: Task Instruction & RGB-D Observation',
-            content: 'The pipeline starts with two inputs: a <strong>natural language task instruction</strong> (e.g., "Put the bread in the bowl") and an <strong>RGB-D observation</strong> from the robot\'s camera. The RGB image provides visual context, while the depth channel (D) captures 3D geometry of the scene. These inputs define what the robot should do and the initial state of the environment.',
+            content: 'The pipeline starts with two inputs: a <strong>natural language task instruction</strong> (e.g., "Put the bread in the bowl") and an <strong>RGB-D observation</strong> from the robot\'s camera.',
             highlightResults: true
         },
         'video-gen': {
             title: 'Video Generation Model',
-            content: 'A state-of-the-art <strong>image-to-video generation model</strong> takes the initial RGB image and task instruction to synthesize a video showing how a human would perform the task. This leverages the model\'s learned understanding of object interactions and physics from large-scale video training data, providing plausible motion trajectories without requiring robot-specific training.',
+            content: 'A state-of-the-art <strong>image-to-video generation model</strong> takes the initial RGB image and task instruction to synthesize a video showing how a human would perform the task. This leverages the model\'s learned understanding of object interactions and physics from large-scale video training data, providing plausible motion trajectories without requiring robot-specific training. See results section for examples.',
             highlightResults: true
         },
         'video-frames': {
             title: 'Video Frames',
-            content: 'The video generation model outputs a sequence of <strong>video frames</strong> depicting the task being performed (typically by imagining human hands). Each frame captures the progressive state of objects as they move according to the task instruction. These frames serve as the source for extracting object motion information.',
+            content: 'The video generation model outputs a sequence of <strong>video frames</strong> depicting the task being performed (typically by imagining human hands). Each frame captures the progressive state of objects as they move according to the task instruction. See results section for examples.',
             highlightResults: true
         },
         'mask': {
             title: 'Object Mask',
-            content: 'A <strong>segmentation model</strong> (such as SAM) generates object masks that identify which pixels belong to the object of interest in each frame. These masks are essential for isolating the object\'s motion from background elements and ensuring accurate tracking of the relevant object throughout the video.',
+            content: 'Given the input RGB image and the natural language name of the object of interest, a <strong>segmentation model</strong> (such as SAM 2 when prompted with bounding boxes from Grounding DINO) generates object masks that identify which pixels belong to the object of interest in each frame.',
             highlightResults: false
         },
         'video-depth': {
             title: 'Video Depth',
-            content: 'A <strong>monocular depth estimation model</strong> predicts depth maps for each generated video frame. Combined with the initial RGB-D observation\'s known scale, these depth estimates allow lifting 2D pixel motions into 3D space. This is crucial for understanding the full 3D trajectory of objects.',
+            content: 'A <strong>monocular depth estimation model</strong> predicts depth maps for each generated video frame. We use the depth output from SpatialTrackerV2 to estimate the depth for all frames and then proceed to use the initial depth from the robot as a reference to calibrate the depth estimates. See results section for examples.',
             highlightResults: true
         },
         '2d-tracks': {
             title: '2D Point Tracking',
-            content: '<strong>Point tracking models</strong> (such as CoTracker) follow individual points on the object across all video frames. These 2D trajectories capture how each sampled point on the object moves through the video. The tracks provide dense motion information that, when combined with depth, yields 3D motion.',
+            content: '<strong>Point tracking models</strong> (such as CoTrackerV3) follow individual points on the object across all video frames. These 2D trajectories capture how each sampled point on the object moves through the video. The tracks provide dense motion information that, when combined with depth, yields 3D object flow. See results section for examples.',
             highlightResults: true
         },
         '3d-flow': {
             title: '3D Object Flow',
-            content: 'By combining 2D point tracks, depth estimates, object masks, and camera intrinsics, we reconstruct the <strong>3D object flow</strong>—the full 3D trajectory of points on the object over time. This representation captures how the object should move in 3D space to complete the task, serving as the target for robot control.',
+            content: 'By combining the 2D point tracks and depth estimates we reconstruct the <strong>3D object flow</strong>—the full 3D trajectory of points on the object over time. This representation captures how the object should move in 3D space to complete the task, serving as the target for robot control. See results section for examples.',
             highlightResults: true
         },
         'controller': {
             title: 'Model-Based Controller',
-            content: 'A <strong>trajectory optimization-based controller</strong> takes the 3D object flow and computes robot actions to track it. The controller uses a dynamics model to predict how robot actions affect object motion, then optimizes to find actions that make the real object follow the desired 3D trajectory. This produces executable low-level commands for the robot.',
+            content: 'A <strong>model-based controller</strong> uses a dynamics model to plan a sequence of actions to minimize a cost function. Our choice of cost function is the distance between the predicted object flow (from the dynamics model) and the extracted 3D object flow from the video. See results section for execution videos and paper for more details.',
             highlightResults: true
         }
     };
