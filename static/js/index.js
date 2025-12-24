@@ -1,10 +1,5 @@
 window.HELP_IMPROVE_VIDEOJS = false;
 
-// Prevent auto-scroll on page load
-if (history.scrollRestoration) {
-    history.scrollRestoration = 'manual';
-}
-
 var INTERP_BASE = "./static/interpolation/stacked";
 var NUM_INTERP_FRAMES = 240;
 
@@ -37,28 +32,6 @@ function setInterpolationImage(i) {
 
 
 $(document).ready(function() {
-    // Force scroll to top immediately
-    window.scrollTo(0, 0);
-    document.documentElement.scrollTop = 0;
-    document.body.scrollTop = 0;
-    
-    // Lock scroll position during initialization
-    var scrollLocked = true;
-    var scrollLockHandler = function(e) {
-        if (scrollLocked) {
-            window.scrollTo(0, 0);
-            e.preventDefault();
-        }
-    };
-    
-    window.addEventListener('scroll', scrollLockHandler, { passive: false });
-    
-    // Unlock scroll after initialization completes
-    setTimeout(function() {
-        scrollLocked = false;
-        window.removeEventListener('scroll', scrollLockHandler);
-    }, 500);
-    
     // Check for click events on the navbar burger icon
     $(".navbar-burger").click(function() {
       // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
@@ -103,13 +76,15 @@ $(document).ready(function() {
         player.currentTime = player.duration / 100 * this.value;
       })
     }, false);*/
-    preloadInterpolationImages();
 
-    $('#interpolation-slider').on('input', function(event) {
-      setInterpolationImage(this.value);
-    });
-    setInterpolationImage(0);
-    $('#interpolation-slider').prop('max', NUM_INTERP_FRAMES - 1);
+    // Defer interpolation preloading since it's not currently used in the index page
+    // preloadInterpolationImages();
+
+    // $('#interpolation-slider').on('input', function(event) {
+    //   setInterpolationImage(this.value);
+    // });
+    // setInterpolationImage(0);
+    // $('#interpolation-slider').prop('max', NUM_INTERP_FRAMES - 1);
 
     bulmaSlider.attach();
 
@@ -131,7 +106,51 @@ $(document).ready(function() {
     // Interactive method diagram functionality
     initializeMethodDiagram();
 
+    // Initialize lazy loading for videos
+    initializeLazyVideos();
 })
+
+// Lazy loading for videos using Intersection Observer
+function initializeLazyVideos() {
+    var lazyVideos = [].slice.call(document.querySelectorAll("video.lazy-video"));
+
+    if ("IntersectionObserver" in window) {
+        var videoObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(video) {
+                if (video.isIntersecting) {
+                    var videoElement = video.target;
+                    var sources = videoElement.querySelectorAll("source");
+                    
+                    sources.forEach(function(source) {
+                        if (source.dataset.src) {
+                            source.src = source.dataset.src;
+                        }
+                    });
+
+                    videoElement.load();
+                    videoElement.classList.remove("lazy-video");
+                    videoObserver.unobserve(videoElement);
+                }
+            });
+        });
+
+        lazyVideos.forEach(function(lazyVideo) {
+            videoObserver.observe(lazyVideo);
+        });
+    } else {
+        // Fallback for browsers that don't support IntersectionObserver
+        lazyVideos.forEach(function(videoElement) {
+            var sources = videoElement.querySelectorAll("source");
+            sources.forEach(function(source) {
+                if (source.dataset.src) {
+                    source.src = source.dataset.src;
+                }
+            });
+            videoElement.load();
+            videoElement.classList.remove("lazy-video");
+        });
+    }
+}
 
 // 3D Flow Visualization Widget Functions
 function initializeVisualizationWidget() {
@@ -384,15 +403,10 @@ function initializeVisualizationWidget() {
         var scrollX = window.scrollX;
         var scrollY = window.scrollY;
         viserIframe.src = viserSrc;
-        // Restore scroll position immediately after setting src
-        if (isInitialLoad) {
-            // Force to top on initial load
-            requestAnimationFrame(function() {
-                window.scrollTo(0, 0);
-            });
-        } else {
+        // Restore scroll position immediately after setting src to prevent jump
+        requestAnimationFrame(function() {
             window.scrollTo(scrollX, scrollY);
-        }
+        });
 
         // Update Input RGB
         if (inputRgbSrc) {
@@ -482,7 +496,24 @@ function initializeVisualizationWidget() {
     });
 
     // Initial selection - mark as initial load to prevent scrolling
-    handleSelection(0, true);
+    // Only load initial videos when the widget becomes visible
+    if ("IntersectionObserver" in window) {
+        var widgetObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    handleSelection(0, true);
+                    widgetObserver.disconnect();
+                }
+            });
+        }, { rootMargin: '200px' }); // Start loading slightly before it enters the viewport
+        
+        var widget = document.querySelector('.visualization-widget');
+        if (widget) {
+            widgetObserver.observe(widget);
+        }
+    } else {
+        handleSelection(0, true);
+    }
 }
 
 // Helper function to parse scores from various formats (e.g., "90%", "7/10", "0.9")
@@ -943,8 +974,24 @@ function initializeFailureModes() {
         });
     });
 
-    // Initialize with default selection
-    selectFailureMode('object_morphing');
+    // Initialize with default selection only when the section becomes visible
+    if ("IntersectionObserver" in window) {
+        var failureObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    selectFailureMode('object_morphing');
+                    failureObserver.disconnect();
+                }
+            });
+        }, { rootMargin: '200px' });
+        
+        var failureSection = document.querySelector('.failure-modes-container');
+        if (failureSection) {
+            failureObserver.observe(failureSection);
+        }
+    } else {
+        selectFailureMode('object_morphing');
+    }
 }
 
 // Interactive Method Diagram Functionality
