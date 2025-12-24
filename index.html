@@ -810,6 +810,41 @@
 
 <div class="rows">
   <div class="container is-max-desktop">
+    <h2 class="title is-3">3D Object Flow as a Reward</h2>
+    <div class="content has-text-justified">
+      <p>
+        The 3D object flow extracted by Dream2Flow serves as an embodiment-agnostic reward signal for reinforcement learning. 
+        We demonstrate that policies trained with 3D object flow rewards achieve comparable performance to those trained with handcrafted object state rewards across diverse embodiments, including a Franka Panda, a Boston Dynamics Spot, and a Fourier GR1 humanoid.
+      </p>
+    </div>
+    <div class="columns is-multiline is-variable is-1">
+      <div class="column is-one-third">
+        <video class="lazy-video" playsinline autoplay loop muted width="100%" style="display:block; margin:auto; border-radius: 6px;" preload="none">
+          <source data-src="./static/videos/diverse_embodiment/franka.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="has-text-centered" style="margin-top: 0.5rem;">Franka Panda</p>
+      </div>
+      <div class="column is-one-third">
+        <video class="lazy-video" playsinline autoplay loop muted width="100%" style="display:block; margin:auto; border-radius: 6px;" preload="none">
+          <source data-src="./static/videos/diverse_embodiment/spot.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="has-text-centered" style="margin-top: 0.5rem;">Spot</p>
+      </div>
+      <div class="column is-one-third">
+        <video class="lazy-video" playsinline autoplay loop muted width="100%" style="display:block; margin:auto; border-radius: 6px;" preload="none">
+          <source data-src="./static/videos/diverse_embodiment/gr1.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <p class="has-text-centered" style="margin-top: 0.5rem;">GR1 Humanoid</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rows">
+  <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
         <h2 class="title is-3">Failure Modes</h2>
