@@ -1,9 +1,14 @@
 .rows {
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 
 .rows + .rows {
-  margin-top: 3rem;
+  margin-top: 2.5rem;
+}
+
+/* Reduce gap between hero and first content section */
+.hero + .rows {
+  margin-top: 1rem;
 }
 
 .rows .title {
@@ -640,30 +645,56 @@ h1.title.publication-title {
   padding-top: 0.5em;
   justify-content: center;
   display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
 }
 
 .button {
   color: #53565A;
   font-family: 'Google Sans', sans-serif;
   border-radius: 0.5em;
-  width: 6em;
-  height: 2.2em;
+  min-width: 6em;
+  width: auto;
+  padding-left: 1em;
+  padding-right: 1em;
+  height: auto;
+  min-height: 2.2em;
+  padding-top: 0.4em;
+  padding-bottom: 0.4em;
   margin-left: 0.4em;
   margin-right: 0.4em;
   text-align: center;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   font-size: 1.1em;
-  text-align: right;
   vertical-align: middle;
   border: solid 0px transparent;
   background-color: #f2f2f2;
+  white-space: nowrap;
 }
 
 .button:hover {
   background-color: #f2f2f2;
   filter: brightness(97%);
+}
+
+/* Responsive button styles for small screens */
+@media screen and (max-width: 600px) {
+  .button-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6em;
+  }
+  
+  .button {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 280px;
+    white-space: normal;
+    word-wrap: break-word;
+  }
 }
 
 .affiliation {

@@ -400,13 +400,17 @@ function initializeVisualizationWidget() {
         // Update Viser iframe
         var viserIframe = document.getElementById('viser-iframe');
         // Store current scroll position to prevent unwanted scrolling
-        var scrollX = window.scrollX;
-        var scrollY = window.scrollY;
+        var savedScrollX = window.scrollX;
+        var savedScrollY = window.scrollY;
         viserIframe.src = viserSrc;
         // Restore scroll position immediately after setting src to prevent jump
         requestAnimationFrame(function() {
-            window.scrollTo(scrollX, scrollY);
+            window.scrollTo(savedScrollX, savedScrollY);
         });
+        // Also restore after a short delay in case iframe load causes delayed scroll
+        setTimeout(function() {
+            window.scrollTo(savedScrollX, savedScrollY);
+        }, 100);
 
         // Update Input RGB
         if (inputRgbSrc) {
@@ -429,9 +433,16 @@ function initializeVisualizationWidget() {
             }
         });
 
-        // Wait for opacity transition (200ms) before scrolling for smoother animation
+        // Scroll thumbnail into view horizontally only, preserving vertical scroll position
         setTimeout(function() {
-            targetThumbnail.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+            var scrollContainer = document.querySelector('.thumbnail-container');
+            if (scrollContainer && targetThumbnail) {
+                // Calculate horizontal scroll position to center the thumbnail
+                var containerRect = scrollContainer.getBoundingClientRect();
+                var thumbRect = targetThumbnail.getBoundingClientRect();
+                var scrollLeft = scrollContainer.scrollLeft + (thumbRect.left - containerRect.left) - (containerRect.width / 2) + (thumbRect.width / 2);
+                scrollContainer.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+            }
         }, 50);
 
         activeIndex = index;
@@ -1010,42 +1021,42 @@ function initializeMethodDiagram() {
     var componentData = {
         'inputs': {
             title: 'Inputs: Task Instruction & RGB-D Observation',
-            content: 'The pipeline starts with two inputs: a <strong>natural language task instruction</strong> (e.g., "Put the bread in the bowl") and an <strong>RGB-D observation</strong> from the robot\'s camera.',
+            content: 'Given a <strong>task instruction</strong> (e.g., "Put the bread in the bowl"), an initial <strong>RGB-D observation</strong> from the robot\'s camera, and known camera intrinsics/extrinsics, the goal is to output an action sequence that accomplishes the task by following object motion inferred from a generated video. We make no assumption about a specific action parameterization—actions may represent motion primitives, end-effector poses, or low-level controls.',
             highlightResults: true
         },
         'video-gen': {
             title: 'Video Generation Model',
-            content: 'A state-of-the-art <strong>image-to-video generation model</strong> takes the initial RGB image and task instruction to synthesize a video showing how a human would perform the task. This leverages the model\'s learned understanding of object interactions and physics from large-scale video training data, providing plausible motion trajectories without requiring robot-specific training. See results section for examples.',
+            content: 'An off-the-shelf <strong>image-to-video generation model</strong> takes the initial RGB image (without the robot visible) and task instruction to synthesize video frames showing how the task would be performed. The robot is excluded from the initial frame as current models not specifically finetuned on robotics data tend to produce physically implausible fine-grained interactions, resulting in worse object trajectories. This approach leverages the model\'s learned understanding of object interactions from large-scale video data.',
             highlightResults: true
         },
         'video-frames': {
-            title: 'Video Frames',
-            content: 'The video generation model outputs a sequence of <strong>video frames</strong> depicting the task being performed (typically by imagining human hands). Each frame captures the progressive state of objects as they move according to the task instruction. See results section for examples.',
+            title: 'Generated Video Frames',
+            content: 'The video generation model outputs a sequence of <strong>RGB video frames</strong> depicting the task being performed—typically showing human hands interacting with objects. Each frame captures the progressive state of objects as they move according to the task instruction. The prompt includes "by one hand" to help with grasp selection and "the camera holds a still pose" since the depth estimation pipeline assumes a static camera.',
             highlightResults: true
         },
         'mask': {
             title: 'Object Mask',
-            content: 'Given the input RGB image and the natural language name of the object of interest, a <strong>segmentation model</strong> (such as SAM 2 when prompted with bounding boxes from Grounding DINO) generates object masks that identify which pixels belong to the object of interest in each frame.',
+            content: 'Dream2Flow localizes the task-relevant object using <strong>Grounding DINO</strong> to produce a bounding box from the initial image and language instruction, then uses that box to prompt <strong>SAM 2</strong> for a binary mask. For articulated objects, flows moving at least 1 pixel per timestep on average are identified as the movable part, and SAM 2 constrains 2D tracks to stay within the mask across frames.',
             highlightResults: false
         },
         'video-depth': {
-            title: 'Video Depth',
-            content: 'A <strong>monocular depth estimation model</strong> predicts depth maps for each generated video frame. We use the depth output from SpatialTrackerV2 to estimate the depth for all frames and then proceed to use the initial depth from the robot as a reference to calibrate the depth estimates. See results section for examples.',
+            title: 'Video Depth Estimation',
+            content: 'Dream2Flow leverages <strong>SpatialTrackerV2</strong> to estimate per-frame depth from the generated video. Due to the scale-shift ambiguity of monocular video, we compute global scale and bias parameters by aligning the first frame\'s depth to the initial depth from the robot\'s RGB-D camera. This produces calibrated depth maps in the robot\'s coordinate frame.',
             highlightResults: true
         },
         '2d-tracks': {
             title: '2D Point Tracking',
-            content: '<strong>Point tracking models</strong> (such as CoTrackerV3) follow individual points on the object across all video frames. These 2D trajectories capture how each sampled point on the object moves through the video. The tracks provide dense motion information that, when combined with depth, yields 3D object flow. See results section for examples.',
+            content: 'From the masked region in the first frame, we sample points and track them across all video frames using <strong>CoTracker3</strong>. This produces 2D trajectories and visibility flags for each tracked point. Points that become occluded are marked as not visible and handled appropriately during 3D lifting. The tracks capture dense motion information showing how each point on the object moves through the video.',
             highlightResults: true
         },
         '3d-flow': {
             title: '3D Object Flow',
-            content: 'By combining the 2D point tracks and depth estimates we reconstruct the <strong>3D object flow</strong>—the full 3D trajectory of points on the object over time. This representation captures how the object should move in 3D space to complete the task, serving as the target for robot control. See results section for examples.',
+            content: 'Visible 2D tracked points are lifted to 3D using the calibrated depth maps and camera intrinsics/extrinsics, producing <strong>3D object flow</strong>—a trajectory of 3D point positions over time in the robot\'s coordinate frame. This representation captures how the object should move in 3D space, serving as an embodiment-agnostic interface between video generation and robot control. The 3D flow enables zero-shot guidance for manipulating rigid, articulated, deformable, and granular objects.',
             highlightResults: true
         },
-        'controller': {
-            title: 'Model-Based Controller',
-            content: 'A <strong>model-based controller</strong> uses a dynamics model to plan a sequence of actions to minimize a cost function. Our choice of cost function is the distance between the predicted object flow (from the dynamics model) and the extracted 3D object flow from the video. See results section for execution videos and paper for more details.',
+        'policy': {
+            title: 'Robot Policy',
+            content: 'The robot policy converts 3D object flow into executable actions without task-specific demonstrations. We support diverse control strategies: <strong>(1) Trajectory optimization</strong> with learned particle dynamics models (Push-T) or rigid-grasp assumptions (real-world pick-and-place), where PyRoki optimizes end-effector poses with smoothness and reachability constraints. <strong>(2) Reinforcement learning</strong> where 3D object flow serves as an embodiment-agnostic reward signal, enabling different strategies to emerge across embodiments (Franka Panda, Boston Dynamics Spot, GR1 Humanoid).',
             highlightResults: true
         }
     };
