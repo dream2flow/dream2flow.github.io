@@ -421,6 +421,14 @@ function initializeVisualizationWidget() {
         // Update and sync top row videos (Generated Video, Video Depth, 2D Tracks)
         syncTopRowVideos(generatedVideoSrc, videoDepthSrc, tracks2dSrc);
 
+        // Re-apply method diagram highlighting if a component is selected
+        if (window.reapplyMethodDiagramHighlight) {
+            // Use a small delay to ensure elements are updated before highlighting
+            setTimeout(function() {
+                window.reapplyMethodDiagramHighlight();
+            }, 50);
+        }
+
         // Show/hide thumbnails with smooth transitions
         thumbnails.forEach(function(thumb, i) {
             // Use linear distance instead of circular to avoid wrapping around
@@ -1005,6 +1013,12 @@ function initializeFailureModes() {
     }
 }
 
+// Global state for method diagram selection (persists across carousel changes)
+var methodDiagramState = {
+    currentSelection: null,
+    currentHighlight: null
+};
+
 // Interactive Method Diagram Functionality
 function initializeMethodDiagram() {
     var hotspots = document.querySelectorAll('.method-hotspot');
@@ -1061,13 +1075,10 @@ function initializeMethodDiagram() {
         }
     };
 
-    var currentSelection = null;
-    var currentHighlight = null;
-
     function clearHighlight() {
-        if (currentHighlight) {
-            currentHighlight.classList.remove('results-highlight');
-            currentHighlight = null;
+        if (methodDiagramState.currentHighlight) {
+            methodDiagramState.currentHighlight.classList.remove('results-highlight');
+            methodDiagramState.currentHighlight = null;
         }
     }
 
@@ -1081,11 +1092,11 @@ function initializeMethodDiagram() {
             // Find the parent container for better visual highlighting
             var container = element.closest('.column');
             if (container) {
-                currentHighlight = container;
+                methodDiagramState.currentHighlight = container;
             } else {
-                currentHighlight = element;
+                methodDiagramState.currentHighlight = element;
             }
-            currentHighlight.classList.add('results-highlight');
+            methodDiagramState.currentHighlight.classList.add('results-highlight');
             // No auto-scroll - user requested removal
         }
     }
@@ -1108,7 +1119,7 @@ function initializeMethodDiagram() {
         explanationContent.innerHTML = data.content;
         explanationCard.classList.add('visible');
 
-        currentSelection = component;
+        methodDiagramState.currentSelection = component;
 
         // Highlight corresponding results element
         var hotspot = document.querySelector('.method-hotspot[data-component="' + component + '"]');
@@ -1125,9 +1136,23 @@ function initializeMethodDiagram() {
         hotspots.forEach(function(hotspot) {
             hotspot.classList.remove('active');
         });
-        currentSelection = null;
+        methodDiagramState.currentSelection = null;
         clearHighlight();
     }
+
+    // Expose function to re-apply highlight after carousel changes
+    window.reapplyMethodDiagramHighlight = function() {
+        if (methodDiagramState.currentSelection) {
+            var data = componentData[methodDiagramState.currentSelection];
+            if (data && data.highlightResults) {
+                var hotspot = document.querySelector('.method-hotspot[data-component="' + methodDiagramState.currentSelection + '"]');
+                if (hotspot) {
+                    var highlightTarget = hotspot.dataset.highlightResults;
+                    highlightResultsElement(highlightTarget);
+                }
+            }
+        }
+    };
 
     // Add click handlers to hotspots
     hotspots.forEach(function(hotspot) {
@@ -1141,7 +1166,7 @@ function initializeMethodDiagram() {
             e.stopPropagation();
             var component = this.dataset.component;
             
-            if (currentSelection === component) {
+            if (methodDiagramState.currentSelection === component) {
                 // Clicking same component closes it
                 closeExplanation();
             } else {
